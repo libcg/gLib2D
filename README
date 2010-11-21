@@ -1,0 +1,35 @@
+* Introduction *
+
+gLib2D by Geecko - A simple, fast, light-weight 2D graphics library.
+This library has been designed to replace the old graphics.c library
+and to simplify the use of the pspgu.
+The goals : keep it simple, keep it small, keep it fast.
+
+* Known limitations *
+
+- Only rectangles can be used. Other primitives,
+  like triangles or lines are just skipped.
+- When some 512*512 rotated, colorized and scaled textures are rendered
+  at a time, the framerate *could* go under 60 fps.
+
+* Installation *
+
+- Simply put glib2d.c and glib2d.h in your source directory.
+- Then add glib2d.o and link "-lpng -ljpeg -lz -lpspgu -lm" in your Makefile.
+- You're done !
+
+* License *
+
+This work is licensed under the Creative Commons BY-SA 3.0 License.
+See http://creativecommons.org/licenses/by-sa/3.0/ or the LICENSE file
+for more details.
+You can support the library by marking your homebrew with
+"Using gLib2D by Geecko".
+
+* Contact *
+
+Please report bugs or submit ideas at :
+geecko.dev@free.fr
+Stay tuned on Twitter or Tumblr :
+http://twitter.com/GeeckoDev
+http://geeckodev.tumblr.com
