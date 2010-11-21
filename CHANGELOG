@@ -1,0 +1,17 @@
+Beta 3 :
+ - Small code cleanup
+ - Bug resolved when gAdd() was not called between gBegin()/gEnd()
+ - Bug resolved with gPop()
+ - Bug resolved when an image is inverted via scaling
+ - Bug resolved when an alpha value was applied to a single object
+ - Added gGet* functions
+ - Added scissor functions
+ - New samples
+
+Beta 2 :
+ - Texture slicing (6x faster with 480*272 texture)
+ - PDF Documentation
+ - Minor corrections
+
+Beta 1 :
+ - Initial release
