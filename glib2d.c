@@ -181,7 +181,7 @@ void _gCropInit()
 }
 
 // Vertex order: [texture uv] [color] [vertex]
-void* _gSetVertex(void* vp, int i, int x, int y)
+void* _gSetVertex(void* vp, int i, float vx, float vy)
 {
   short* v_p_short = vp;
   gColor* v_p_color;
@@ -190,8 +190,8 @@ void* _gSetVertex(void* vp, int i, int x, int y)
   // Texture
   if (obj_use_tex)
   {
-    *(v_p_short++) = I_OBJ.crop_x + x;
-    *(v_p_short++) = I_OBJ.crop_y + y;
+    *(v_p_short++) = I_OBJ.crop_x + vx * I_OBJ.crop_w;
+    *(v_p_short++) = I_OBJ.crop_y + vy * I_OBJ.crop_h;
   }
   
   // Color
@@ -205,18 +205,9 @@ void* _gSetVertex(void* vp, int i, int x, int y)
   // Coord
   v_p_float = (float*)v_p_color;
   
-  // For slicing technique
-  // When no texture is used, the crop is not set.
-  if (obj_use_tex)
-  {
-    v_p_float[0] = I_OBJ.x + x * I_OBJ.scale_w / I_OBJ.crop_w;
-    v_p_float[1] = I_OBJ.y + y * I_OBJ.scale_h / I_OBJ.crop_h;
-  }
-  else
-  {
-    v_p_float[0] = I_OBJ.x + x;
-    v_p_float[1] = I_OBJ.y + y;
-  }
+  v_p_float[0] = I_OBJ.x + vx * I_OBJ.scale_w;
+  v_p_float[1] = I_OBJ.y + vy * I_OBJ.scale_h;
+
   // Then apply the rotation
   if (obj_use_rot)
   {
@@ -322,7 +313,7 @@ void gEnd()
                v_color_size * sizeof(gColor) +
                v_coord_size * sizeof(float),
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
-      n_slices = -1, i, w, h, u;
+      n_slices = -1, i;
 
   if (obj_use_tex)        v_type |= GU_TEXTURE_16BIT;
   if (obj_use_vert_color) v_type |= GU_COLOR_8888;
@@ -347,34 +338,31 @@ void gEnd()
   // Build the vertex list
   for (i=0; i!=obj_list_size; i++)
   {
-    // Crop is not set when no texture is used.
-    if (obj_use_tex) w = I_OBJ.crop_w,  h = I_OBJ.crop_h;
-    else             w = I_OBJ.scale_w, h = I_OBJ.scale_h;
-    
     if (!obj_use_rot)
     {
       if (!obj_use_tex)
       {
-        vi = _gSetVertex(vi,i,0,0);
-        vi = _gSetVertex(vi,i,w,h);
+        vi = _gSetVertex(vi,i,0.f,0.f);
+        vi = _gSetVertex(vi,i,1.f,1.f);
       }
       else // Use texture slicing
       {
-        for (u=0; u<w; u+=SLICE_WIDTH)
+        float u, step = (float)SLICE_WIDTH/I_OBJ.crop_w;
+        for (u=0.f; u<1.f; u+=step)
         {
-          vi = _gSetVertex(vi,i,u,0);
-          vi = _gSetVertex(vi,i,((u+SLICE_WIDTH) > w ? w : u+SLICE_WIDTH),h);
+          vi = _gSetVertex(vi,i,u,0.f);
+          vi = _gSetVertex(vi,i,((u+step) > 1.f ? 1.f : u+step),1.f);
         }
       }
     }
     else // Rotation : draw 2 triangles per obj
     {
-      vi = _gSetVertex(vi,i,0,0);
-      vi = _gSetVertex(vi,i,w,0);
-      vi = _gSetVertex(vi,i,0,h);
-      vi = _gSetVertex(vi,i,0,h);
-      vi = _gSetVertex(vi,i,w,0);
-      vi = _gSetVertex(vi,i,w,h);
+      vi = _gSetVertex(vi,i,0.f,0.f);
+      vi = _gSetVertex(vi,i,1.f,0.f);
+      vi = _gSetVertex(vi,i,0.f,1.f);
+      vi = _gSetVertex(vi,i,0.f,1.f);
+      vi = _gSetVertex(vi,i,1.f,0.f);
+      vi = _gSetVertex(vi,i,1.f,1.f);
     }
   }
 
