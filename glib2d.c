@@ -40,8 +40,8 @@
 #define DEFAULT_COLOR      (WHITE)
 #define DEFAULT_ALPHA      (0xFF)
 
-#define CURRENT_OBJ obj_list[obj_list_size]
-#define CURRENT_TRANSFORM transform_stack[transform_stack_size]
+#define CURRENT_OBJ obj_list[obj_list_size-1]
+#define CURRENT_TRANSFORM transform_stack[transform_stack_size-1]
 #define I_OBJ obj_list[i]
 
 typedef struct
@@ -443,6 +443,8 @@ void gAdd()
     obj_list = realloc(obj_list,obj_list_size_malloc * sizeof(Obj_Properties));
   }
   
+  obj_list_size++;
+  
   CURRENT_OBJ.x = obj_x;
   CURRENT_OBJ.y = obj_y;
   CURRENT_OBJ.z = obj_z;
@@ -490,14 +492,13 @@ void gAdd()
   }             
   // Alpha stuff
   CURRENT_OBJ.color = G_MODULATE(CURRENT_OBJ.color,255,obj_alpha);
-
-  obj_list_size++;
 }
 
 
 void gPush()
 {
   if (transform_stack_size >= TRANSFORM_STACK_MAX) return;
+  transform_stack_size++;
   CURRENT_TRANSFORM.x = obj_x;
   CURRENT_TRANSFORM.y = obj_y;
   CURRENT_TRANSFORM.z = obj_z;
@@ -506,14 +507,12 @@ void gPush()
   CURRENT_TRANSFORM.rot_cos = obj_rot_cos;
   CURRENT_TRANSFORM.scale_w = obj_scale_w;
   CURRENT_TRANSFORM.scale_h = obj_scale_h;
-  transform_stack_size++;
 }
 
 
 void gPop()
 {
   if (transform_stack_size <= 0) return;
-  transform_stack_size--;
   obj_x = CURRENT_TRANSFORM.x;
   obj_y = CURRENT_TRANSFORM.y;
   obj_z = CURRENT_TRANSFORM.z;
@@ -524,6 +523,7 @@ void gPop()
   obj_scale_h = CURRENT_TRANSFORM.scale_h;
   if (obj_rot != 0.f) obj_use_rot = G_TRUE;
   if (obj_z != 0.f) obj_use_z = G_TRUE;
+  transform_stack_size--;
 }
 
 // * Coord functions *
