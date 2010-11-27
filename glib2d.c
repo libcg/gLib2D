@@ -8,7 +8,6 @@
 #include "glib2d.h"
 
 #include <pspkernel.h>
-#include <pspdebug.h>
 #include <pspdisplay.h>
 #include <pspgu.h>
 #include <stdio.h>
