@@ -688,6 +688,14 @@ void gSetCropXYRelative(int x, int y);
 void gSetCropWHRelative(int w, int h);
 
 /**
+ * \brief Resets texture properties.
+ *
+ * This function can be called everywhere in the loop.
+ */
+
+void gResetTex();
+
+/**
  * \brief Use the alpha blending with the texture.
  * @param use G_TRUE to activate (better look, by default).
               G_FALSE to desactivate (better performance).

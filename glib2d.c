@@ -63,7 +63,7 @@ typedef struct
 
 
 // * Main vars *
-static unsigned int __attribute__((aligned(16))) gu_list[262144];
+static unsigned int __attribute__((aligned(16))) list[262144];
 static bool init = G_FALSE, start = G_FALSE, zclear = G_TRUE, scissor = G_FALSE;
 static Transform transform_stack[TRANSFORM_STACK_MAX];
 static int transform_stack_size;
@@ -71,8 +71,8 @@ static int transform_stack_size;
 static Obj_Properties* obj_list = NULL;
 static int obj_list_size, obj_list_size_malloc; // Real & malloc'ed size
 static bool obj_begin = G_FALSE;
-static bool obj_use_z, obj_use_vert_color, obj_use_blend,
-            obj_use_rot, obj_use_tex, obj_use_tex_linear;
+static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
+            obj_use_tex, obj_use_tex_linear;
 // * Coord vars *
 static gEnum obj_coord_mode;
 static float obj_x, obj_y, obj_z;
@@ -96,7 +96,7 @@ void _gInit()
 {
   // Init & setup GU
   sceGuInit();
-  sceGuStart(GU_DIRECT,gu_list);
+  sceGuStart(GU_DIRECT,list);
 
   sceGuDrawBuffer(GU_PSM_8888,(void*)FRAMEBUFFER_SIZE,PSP_LINE_SIZE);
   sceGuDispBuffer(G_SCR_W,G_SCR_H,(void*)0,PSP_LINE_SIZE);
@@ -134,7 +134,7 @@ void _gStart()
   if (!init) _gInit();
 
   sceKernelDcacheWritebackAll();
-  sceGuStart(GU_DIRECT,gu_list);
+  sceGuStart(GU_DIRECT,list);
   start = G_TRUE;
 }
 
@@ -177,6 +177,13 @@ void _gRotationInit()
 void _gCropInit()
 {
   gResetCrop();
+}
+
+
+void _gTexInit()
+{
+  obj_use_tex = G_TRUE;
+  gResetTex();
 }
 
 // Vertex order: [texture uv] [color] [vertex]
@@ -277,11 +284,9 @@ void gBegin(gImage* tex)
   if (tex == NULL) obj_use_tex = G_FALSE;
   else 
   {
-    obj_use_tex = G_TRUE;
     obj_tex = tex;
+    _gTexInit();
     _gCropInit();
-    obj_use_tex_linear = G_TRUE;
-    if (tex->can_blend) obj_use_blend = G_TRUE;
   }
   
   _gScaleInit();
@@ -729,6 +734,7 @@ void gResetCrop()
 
 void gGetCropXY(int* x, int* y)
 {
+  if (!obj_use_tex) return;
   if (x != NULL) *x = obj_crop_x;
   if (y != NULL) *y = obj_crop_y;
 }
@@ -736,6 +742,7 @@ void gGetCropXY(int* x, int* y)
 
 void gGetCropWH(int* w, int* h)
 {
+  if (!obj_use_tex) return;
   if (w != NULL) *w = obj_crop_w;
   if (h != NULL) *h = obj_crop_h;
 }
@@ -743,6 +750,7 @@ void gGetCropWH(int* w, int* h)
 
 void gSetCropXY(int x, int y)
 {
+  if (!obj_use_tex) return;
   obj_crop_x = x;
   obj_crop_y = y;
 }
@@ -750,6 +758,7 @@ void gSetCropXY(int x, int y)
 
 void gSetCropWH(int w, int h)
 {
+  if (!obj_use_tex) return;
   obj_crop_w = w;
   obj_crop_h = h;
 }
@@ -757,16 +766,26 @@ void gSetCropWH(int w, int h)
 
 void gSetCropXYRelative(int x, int y)
 {
+  if (!obj_use_tex) return;
   gSetCropXY(obj_crop_x + x, obj_crop_y + y);
 }
 
 
 void gSetCropWHRelative(int w, int h)
 {
+  if (!obj_use_tex) return;
   gSetCropWH(obj_crop_w + w, obj_crop_h + h);
 }
 
 // * Texture functions *
+
+void gResetTex()
+{
+  if (!obj_use_tex) return;
+  obj_use_tex_linear = G_TRUE;
+  if (obj_tex->can_blend) obj_use_blend = G_TRUE;
+}
+
 
 void gSetTexBlend(bool use)
 {
