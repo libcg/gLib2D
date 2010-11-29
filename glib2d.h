@@ -696,6 +696,16 @@ void gSetCropWHRelative(int w, int h);
 void gResetTex();
 
 /**
+ * \brief Set texture wrap.
+ * @param use G_TRUE to repeat.
+              G_FALSE to clamp (by default).
+ *
+ * This function must be called during object rendering.
+ */
+
+void gSetTexRepeat(bool use);
+
+/**
  * \brief Use the alpha blending with the texture.
  * @param use G_TRUE to activate (better look, by default).
               G_FALSE to desactivate (better performance).

@@ -72,7 +72,7 @@ static Obj_Properties* obj_list = NULL;
 static int obj_list_size, obj_list_size_malloc; // Real & malloc'ed size
 static bool obj_begin = G_FALSE;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
-            obj_use_tex, obj_use_tex_linear;
+            obj_use_tex, obj_use_tex_linear, obj_use_tex_repeat;
 // * Coord vars *
 static gEnum obj_coord_mode;
 static float obj_x, obj_y, obj_z;
@@ -383,6 +383,8 @@ void gEnd()
     sceGuEnable(GU_TEXTURE_2D);
     if (obj_use_tex_linear) sceGuTexFilter(GU_LINEAR,GU_LINEAR);
     else                    sceGuTexFilter(GU_NEAREST,GU_NEAREST);
+    if (obj_use_tex_repeat) sceGuTexWrap(GU_REPEAT,GU_REPEAT);
+    else                    sceGuTexWrap(GU_CLAMP,GU_CLAMP);
     // Load texture
     sceGuTexMode(GU_PSM_8888,0,0,obj_tex->swizzled);
     sceGuTexImage(0,obj_tex->tw,obj_tex->th,obj_tex->tw,obj_tex->data);
@@ -782,8 +784,16 @@ void gSetCropWHRelative(int w, int h)
 void gResetTex()
 {
   if (!obj_use_tex) return;
+  obj_use_tex_repeat = G_FALSE;
   obj_use_tex_linear = G_TRUE;
   if (obj_tex->can_blend) obj_use_blend = G_TRUE;
+}
+
+
+void gSetTexRepeat(bool use)
+{
+  if (!obj_use_tex) return;
+  obj_use_tex_repeat = use;
 }
 
 
