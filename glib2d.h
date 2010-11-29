@@ -236,16 +236,17 @@ void gClear(gColor color);
 void gClearZ();
 
 /**
- * \brief Begins object rendering.
- * @param tex Pointer to a texture, pass NULL to get a colored object.
+ * \brief Begins rectangles rendering.
+ * @param tex Pointer to a texture, pass NULL to get a colored rectangle.
  *
  * This function begins object rendering. Calls gReset().
+ * One gAdd() call per object.
  * Only one texture can be used, but multiple objects can be rendered at a time.
  * gBegin() / gEnd() couple can be called multiple times in the loop, to render
  * multiple textures.
  */
 
-void gBegin(gImage* tex);
+void gBeginRects(gImage* tex);
 
 /**
  * \brief Ends object rendering.

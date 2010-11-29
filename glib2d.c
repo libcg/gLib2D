@@ -43,6 +43,8 @@
 #define CURRENT_TRANSFORM transform_stack[transform_stack_size-1]
 #define I_OBJ obj_list[i]
 
+enum Obj_Types { RECTANGLES };
+
 typedef struct
 {
   float x, y, z;
@@ -69,6 +71,7 @@ static Transform transform_stack[TRANSFORM_STACK_MAX];
 static int transform_stack_size;
 // * Object vars *
 static Obj_Properties* obj_list = NULL;
+static gEnum obj_type;
 static int obj_list_size, obj_list_size_malloc; // Real & malloc'ed size
 static bool obj_begin = G_FALSE;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
@@ -267,20 +270,29 @@ void gClearZ()
 }
 
 
-void gBegin(gImage* tex)
+void _gBeginCommon()
 {
-  if (obj_begin) return;
   if (!start) _gStart();
 
   obj_list_size = 0;
   obj_list_size_malloc = MALLOC_STEP;
   obj_list = realloc(obj_list,obj_list_size_malloc * sizeof(Obj_Properties));
-
+  
   _gCoordInit();
   _gColorInit();
   _gAlphaInit();
   _gRotationInit();
+  
+  obj_begin = G_TRUE;
+}
 
+
+void gBeginRects(gImage* tex)
+{
+  if (obj_begin) return;
+
+  _gBeginCommon();
+  
   if (tex == NULL) obj_use_tex = G_FALSE;
   else 
   {
@@ -288,21 +300,14 @@ void gBegin(gImage* tex)
     _gTexInit();
     _gCropInit();
   }
-  
   _gScaleInit();
   
-  obj_begin = G_TRUE;
+  obj_type = RECTANGLES;
 }
 
 
-void gEnd()
+void _gEndRects()
 {
-  if (!obj_begin || obj_list_size <= 0)
-  {
-    obj_begin = G_FALSE;
-    return;
-  }
-
   // Horror : we need to sort the vertices.
   if (obj_use_z && obj_use_blend) _gVertexSort();
 
@@ -392,6 +397,21 @@ void gEnd()
 
   // Then put it in the display list.
   sceGuDrawArray(prim,v_type,v_nbr,NULL,v);
+}
+
+
+void gEnd()
+{
+  if (!obj_begin || obj_list_size <= 0)
+  {
+    obj_begin = G_FALSE;
+    return;
+  }
+
+  switch (obj_type)
+  {
+    case RECTANGLES: _gEndRects(); break;
+  }
 
   sceGuColor(WHITE);
   sceGuEnable(GU_BLEND);
