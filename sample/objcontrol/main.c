@@ -29,7 +29,8 @@ int main()
   
   SceCtrlData pad;
   gImage* tex = gTexLoad("tex.png",G_TRUE);
-  int alpha = 255, x = G_SCR_W/2, y = G_SCR_H/2, w = 125, h = 125, rot = 0;
+  int alpha = 255, x = G_SCR_W/2, y = G_SCR_H/2,
+      w = tex->w, h = tex->h, rot = 0;
 
   while (1)
   {
