@@ -476,7 +476,7 @@ void gAdd()
                      (obj_coord_mode == G_DOWN_LEFT ||
                       obj_coord_mode == G_DOWN_RIGHT) ?
                        CURRENT_OBJ.scale_h : 0;
-  }             
+  }
   // Alpha stuff
   CURRENT_OBJ.color = G_MODULATE(CURRENT_OBJ.color,255,obj_alpha);
 }
@@ -607,20 +607,20 @@ void gSetScaleWH(int w, int h)
 {
   obj_scale_w = w;
   obj_scale_h = h;
+  // A trick to prevent an unexpected behavior when mirroring with GU_SPRITES.
+  if (obj_scale_w < 0 || obj_scale_h < 0) obj_use_rot = G_TRUE;  
 }
 
 
 void gSetScaleRelative(float w, float h)
 {
-  obj_scale_w *= w;
-  obj_scale_h *= h;
+  gSetScaleWH(obj_scale_w * w, obj_scale_h * h);
 }
 
 
 void gSetScaleWHRelative(int w, int h)
 {
-  obj_scale_w += w;
-  obj_scale_h += h;
+  gSetScaleWH(obj_scale_w + w, obj_scale_h + h);
 }
 
 // * Color functions *
