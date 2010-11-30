@@ -179,15 +179,22 @@ void _gRotationInit()
 
 void _gCropInit()
 {
+  if (!obj_use_tex) return;
   gResetCrop();
 }
 
 
 void _gTexInit()
 {
+  if (obj_tex == NULL)
+  {
+    obj_use_tex = G_FALSE;
+    return;
+  }
   obj_use_tex = G_TRUE;
   gResetTex();
 }
+
 
 // Vertex order: [texture uv] [color] [vertex]
 void* _gSetVertex(void* vp, int i, float vx, float vy)
@@ -282,6 +289,9 @@ void _gBeginCommon()
   _gColorInit();
   _gAlphaInit();
   _gRotationInit();
+  _gTexInit();
+  _gCropInit();
+  _gScaleInit();
   
   obj_begin = G_TRUE;
 }
@@ -291,18 +301,9 @@ void gBeginRects(gImage* tex)
 {
   if (obj_begin) return;
 
-  _gBeginCommon();
-  
-  if (tex == NULL) obj_use_tex = G_FALSE;
-  else 
-  {
-    obj_tex = tex;
-    _gTexInit();
-    _gCropInit();
-  }
-  _gScaleInit();
-  
   obj_type = RECTANGLES;
+  obj_tex = tex;
+  _gBeginCommon();
 }
 
 
@@ -375,6 +376,19 @@ void _gEndRects()
     }
   }
 
+  // Then put it in the display list.
+  sceGuDrawArray(prim,v_type,v_nbr,NULL,v);
+}
+
+
+void gEnd()
+{
+  if (!obj_begin || obj_list_size <= 0)
+  {
+    obj_begin = G_FALSE;
+    return;
+  }
+
   // Manage pspgu extensions
   if (obj_use_z)          sceGuEnable(GU_DEPTH_TEST);
   else                    sceGuDisable(GU_DEPTH_TEST);
@@ -393,19 +407,6 @@ void _gEndRects()
     // Load texture
     sceGuTexMode(GU_PSM_8888,0,0,obj_tex->swizzled);
     sceGuTexImage(0,obj_tex->tw,obj_tex->th,obj_tex->tw,obj_tex->data);
-  }
-
-  // Then put it in the display list.
-  sceGuDrawArray(prim,v_type,v_nbr,NULL,v);
-}
-
-
-void gEnd()
-{
-  if (!obj_begin || obj_list_size <= 0)
-  {
-    obj_begin = G_FALSE;
-    return;
   }
 
   switch (obj_type)
