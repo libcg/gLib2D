@@ -45,7 +45,7 @@ int main()
     gAdd();
     gSetRotation(-rot);
     
-    /*for (i=0; i!=branches; i++)
+    for (i=0; i!=branches; i++)
     {
       gPush();
       gSetAlpha(200);
@@ -64,7 +64,7 @@ int main()
       
       gPop();
       gSetRotationRelative(360/branches);
-    }*/
+    }
     
     gEnd();
     

@@ -1,5 +1,4 @@
-// A simple clock.
-// Rotated rectangles can easily replace lines (but crappy rendering).
+// A simple clock (using lines).
 
 #include <pspkernel.h>
 #include <psprtc.h>
@@ -35,31 +34,39 @@ int main()
     
     gClear(WHITE);
     
-    gBeginRects(NULL);
+    gBeginLines(NULL);
     
-    gSetCoordMode(G_DOWN_LEFT);
     gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
     
     // Hours
-    gSetScaleWH(1,30);
+    gPush();
     gSetColor(BLACK);
     gSetRotation(((time.hour%12)+
                   time.minutes/60.f+
                   time.seconds/3600.f)*360/12);
     gAdd();
+    gSetCoordXYRelative(30.f,0.f,G_TRUE);
+    gAdd();
+    gPop();
     
     // Minutes
-    gSetScaleWH(1,70);
+    gPush();
     gSetColor(BLACK);
     gSetRotation((time.minutes+
                  time.seconds/60.f)*360.f/60.f);
     gAdd();
+    gSetCoordXYRelative(70.f,0.f,G_TRUE);
+    gAdd();
+    gPop();
     
     // Seconds
-    gSetScaleWH(1,70);
+    gPush();
     gSetColor(RED);
     gSetRotation(time.seconds*360.f/60.f);
     gAdd();
+    gSetCoordXYRelative(70.f,0.f,G_TRUE);
+    gAdd();
+    gPop();
     
     gEnd();
     

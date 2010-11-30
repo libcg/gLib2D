@@ -33,7 +33,7 @@ int main()
     if ((rot++) > 360) rot -= 360;
     
     gClear(WHITE);
-    
+
     gBeginRects(NULL);
     gSetScaleWH(42,42);
     gSetColor(RED);

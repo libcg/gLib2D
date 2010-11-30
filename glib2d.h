@@ -249,6 +249,15 @@ void gClearZ();
 void gBeginRects(gImage* tex);
 
 /**
+ * \brief Begins lines rendering.
+ *
+ * This function begins object rendering. Calls gReset().
+ * Two gAdd() calls per object.
+ */
+
+void gBeginLines();
+
+/**
  * \brief Ends object rendering.
  *
  * This function ends object rendering. Must be called after gBegin() to add
