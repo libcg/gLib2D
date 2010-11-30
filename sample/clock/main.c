@@ -35,7 +35,7 @@ int main()
     
     gClear(WHITE);
     
-    gBegin(NULL);
+    gBeginRects(NULL);
     
     gSetCoordMode(G_DOWN_LEFT);
     gSetCoordXY(G_SCR_W/2,G_SCR_H/2);

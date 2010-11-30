@@ -32,7 +32,7 @@ int main()
   {
     gClear(BLACK); // Clears zbuffer since Z coordinate is used in the loop
     
-    gBegin(NULL);
+    gBeginRects(NULL);
     
     gSetColor(AZURE);
     gSetAlpha(255);

@@ -37,7 +37,7 @@ int main()
      
     gClear(WHITE);
     
-    gBegin(NULL); // No texture
+    gBeginRects(NULL); // No texture
     gSetColor(AZURE);
     gSetScaleWH(size,size);
     gSetCoordXY(x,y);

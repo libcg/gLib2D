@@ -52,7 +52,7 @@ int main()
     // Display
     gClear(WHITE);
     
-    gBegin(tex);
+    gBeginRects(tex);
     if (tex == NULL) gSetColor(RED);
     gSetCoordMode(G_CENTER);
     gSetAlpha(alpha);

@@ -34,7 +34,7 @@ int main()
     
     gClear(WHITE);
     
-    gBegin(NULL);
+    gBeginRects(NULL);
     gSetScaleWH(42,42);
     gSetColor(RED);
     
