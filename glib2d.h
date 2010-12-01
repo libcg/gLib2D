@@ -242,8 +242,8 @@ void gClearZ();
  * This function begins object rendering. Calls gReset().
  * One gAdd() call per object.
  * Only one texture can be used, but multiple objects can be rendered at a time.
- * gBegin() / gEnd() couple can be called multiple times in the loop, to render
- * multiple textures.
+ * gBegin*() / gEnd() couple can be called multiple times in the loop,
+ * to render multiple textures.
  */
 
 void gBeginRects(gImage* tex);
@@ -258,9 +258,22 @@ void gBeginRects(gImage* tex);
 void gBeginLines();
 
 /**
+ * \brief Begins quads rendering.
+ * @param tex Pointer to a texture, pass NULL to get a colored quad.
+ *
+ * This function begins object rendering. Calls gReset().
+ * Four gAdd() calls per object, first is for up left corner, then clockwise.
+ * Only one texture can be used, but multiple objects can be rendered at a time.
+ * gBegin*() / gEnd() couple can be called multiple times in the loop,
+ * to render multiple textures.
+ */
+
+void gBeginQuads(gImage* tex);
+
+/**
  * \brief Ends object rendering.
  *
- * This function ends object rendering. Must be called after gBegin() to add
+ * This function ends object rendering. Must be called after gBegin*() to add
  * objects to the display list. Automatically adapts pspgu functionnalities
  * to get the best performance possible.
  */

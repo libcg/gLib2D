@@ -43,7 +43,7 @@
 #define CURRENT_TRANSFORM transform_stack[transform_stack_size-1]
 #define I_OBJ obj_list[i]
 
-enum Obj_Types { RECTANGLES, LINES };
+enum Obj_Types { RECTS, LINES, QUADS };
 
 typedef struct
 {
@@ -221,8 +221,8 @@ void* _gSetVertex(void* vp, int i, float vx, float vy)
   // Coord
   v_p_float = (float*)v_p_color;
 
-  v_p_float[0] = I_OBJ.x + (obj_type == RECTANGLES) ? vx * I_OBJ.scale_w : 0;
-  v_p_float[1] = I_OBJ.y + (obj_type == RECTANGLES) ? vy * I_OBJ.scale_h : 0;
+  v_p_float[0] = I_OBJ.x + (obj_type == RECTS ? vx * I_OBJ.scale_w : 0.f);
+  v_p_float[1] = I_OBJ.y + (obj_type == RECTS ? vy * I_OBJ.scale_h : 0.f);
 
   // Then apply the rotation
   if (obj_use_rot && !(I_OBJ.rot_x == I_OBJ.x && I_OBJ.rot_y == I_OBJ.y))
@@ -301,7 +301,7 @@ void gBeginRects(gImage* tex)
 {
   if (obj_begin) return;
 
-  obj_type = RECTANGLES;
+  obj_type = RECTS;
   obj_tex = tex;
   _gBeginCommon();
 }
@@ -312,6 +312,17 @@ void gBeginLines()
   if (obj_begin) return;
 
   obj_type = LINES;
+  obj_tex = NULL;
+  _gBeginCommon();
+}
+
+
+void gBeginQuads(gImage* tex)
+{
+  if (obj_begin) return;
+
+  obj_type = QUADS;
+  obj_tex = tex;
   _gBeginCommon();
 }
 
@@ -420,6 +431,43 @@ void _gEndLines()
 }
 
 
+void _gEndQuads()
+{
+  // Define vertices properties
+  int prim = GU_TRIANGLES,
+      v_obj_nbr = 6,
+      v_nbr = v_obj_nbr * (obj_list_size / 4),
+      v_coord_size = 3,
+      v_tex_size = (obj_use_tex) ? 2 : 0,
+      v_color_size = (obj_use_vert_color) ? 1 : 0,
+      v_size = v_tex_size * sizeof(short) +
+               v_color_size * sizeof(gColor) +
+               v_coord_size * sizeof(float),
+      v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
+      i;
+
+  if (obj_use_tex)        v_type |= GU_TEXTURE_16BIT;
+  if (obj_use_vert_color) v_type |= GU_COLOR_8888;
+
+  // Allocate vertex list memory
+  void *v = sceGuGetMemory(v_nbr * v_size), *vi = v;
+
+  // Build the vertex list
+  for (i=0; i+3<obj_list_size; i+=4)
+  {
+      vi = _gSetVertex(vi,i  ,0.f,0.f);
+      vi = _gSetVertex(vi,i+1,1.f,0.f);
+      vi = _gSetVertex(vi,i+3,0.f,1.f);
+      vi = _gSetVertex(vi,i+3,0.f,1.f);
+      vi = _gSetVertex(vi,i+1,1.f,0.f);
+      vi = _gSetVertex(vi,i+2,1.f,1.f);
+  }
+
+  // Then put it in the display list.
+  sceGuDrawArray(prim,v_type,v_nbr,NULL,v);
+}
+
+
 void gEnd()
 {
   if (!obj_begin || obj_list_size <= 0)
@@ -450,8 +498,9 @@ void gEnd()
 
   switch (obj_type)
   {
-    case RECTANGLES: _gEndRects(); break;
-    case LINES:      _gEndLines(); break;
+    case RECTS: _gEndRects(); break;
+    case LINES: _gEndLines(); break;
+    case QUADS: _gEndQuads(); break;
   }
 
   sceGuColor(WHITE);
