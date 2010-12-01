@@ -23,10 +23,80 @@ int SetupCallbacks() {
   if(thid >= 0) sceKernelStartThread(thid, 0, 0);
   return thid; }
 
+pspTime time;
+
+void drawBorder() // A circle.
+{
+  int i, n = 42;
+  float size = 80.f;
+  
+  gBeginLines();
+  
+  gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
+  gSetColor(LITEGRAY);
+  
+  for (i=0; i!=n; i++)
+  {
+    gPush();
+    gSetCoordXYRelative(0.f,-size,G_TRUE);
+    gAdd();
+    gPop();
+    
+    gSetRotationRelative(360.f/n);
+    
+    gPush();
+    gSetCoordXYRelative(0.f,-size,G_TRUE);
+    gAdd();
+    gPop();
+  }  
+  
+  gEnd();
+}
+
+
+void drawNeedles()
+{
+  gBeginLines();
+  
+  gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
+
+  // Hours
+  gPush();
+  gSetColor(BLACK);
+  gSetRotation((time.hour%12+
+                time.minutes/60.f+
+                time.seconds/3600.f)*360.f/12.f);
+  gAdd();
+  gSetCoordXYRelative(0.f,-30.f,G_TRUE);
+  gAdd();
+  gPop();
+  
+  // Minutes
+  gPush();
+  gSetColor(BLACK);
+  gSetRotation((time.minutes+
+                time.seconds/60.f)*360.f/60.f);
+  gAdd();
+  gSetCoordXYRelative(0.f,-70.f,G_TRUE);
+  gAdd();
+  gPop();
+  
+  // Seconds
+  gPush();
+  gSetColor(RED);
+  gSetRotation(time.seconds*360.f/60.f);
+  gAdd();
+  gSetCoordXYRelative(0.f,-70.f,G_TRUE);
+  gAdd();
+  gPop();
+
+  gEnd();
+}
+
+
 int main()
 {
   SetupCallbacks();
-  pspTime time;
   
   while (1)
   {
@@ -34,41 +104,8 @@ int main()
     
     gClear(WHITE);
     
-    gBeginLines(NULL);
-    
-    gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
-    
-    // Hours
-    gPush();
-    gSetColor(BLACK);
-    gSetRotation(((time.hour%12)+
-                  time.minutes/60.f+
-                  time.seconds/3600.f)*360/12);
-    gAdd();
-    gSetCoordXYRelative(30.f,0.f,G_TRUE);
-    gAdd();
-    gPop();
-    
-    // Minutes
-    gPush();
-    gSetColor(BLACK);
-    gSetRotation((time.minutes+
-                 time.seconds/60.f)*360.f/60.f);
-    gAdd();
-    gSetCoordXYRelative(70.f,0.f,G_TRUE);
-    gAdd();
-    gPop();
-    
-    // Seconds
-    gPush();
-    gSetColor(RED);
-    gSetRotation(time.seconds*360.f/60.f);
-    gAdd();
-    gSetCoordXYRelative(70.f,0.f,G_TRUE);
-    gAdd();
-    gPop();
-    
-    gEnd();
+    drawBorder();
+    drawNeedles();
     
     gFlip(G_TRUE); // Vsync enabled
   }
