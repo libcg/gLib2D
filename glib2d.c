@@ -11,7 +11,7 @@
 #include <pspdisplay.h>
 #include <pspgu.h>
 #include <stdio.h>
-#include <malloc.h> 
+#include <malloc.h>
 #include <string.h>
 #include <math.h>
 
@@ -209,10 +209,10 @@ void* _gSetVertex(void* vp, int i, float vx, float vy)
     *(v_p_short++) = I_OBJ.crop_x + vx * I_OBJ.crop_w;
     *(v_p_short++) = I_OBJ.crop_y + vy * I_OBJ.crop_h;
   }
-  
+
   // Color
   v_p_color = (gColor*)v_p_short;
-  
+
   if (obj_use_vert_color)
   {
     *(v_p_color++) = I_OBJ.color;
@@ -220,7 +220,7 @@ void* _gSetVertex(void* vp, int i, float vx, float vy)
 
   // Coord
   v_p_float = (float*)v_p_color;
-  
+
   v_p_float[0] = I_OBJ.x + vx * I_OBJ.scale_w;
   v_p_float[1] = I_OBJ.y + vy * I_OBJ.scale_h;
 
@@ -232,9 +232,9 @@ void* _gSetVertex(void* vp, int i, float vx, float vy)
     v_p_float[1] = I_OBJ.rot_y + I_OBJ.rot_cos*ty + I_OBJ.rot_sin*tx;
   }
   v_p_float[2] = I_OBJ.z;
-  
+
   v_p_float += 3;
-  
+
   return (void*)v_p_float;
 }
 
@@ -284,7 +284,7 @@ void _gBeginCommon()
   obj_list_size = 0;
   obj_list_size_malloc = MALLOC_STEP;
   obj_list = realloc(obj_list,obj_list_size_malloc * sizeof(Obj_Properties));
-  
+
   _gCoordInit();
   _gColorInit();
   _gAlphaInit();
@@ -292,7 +292,7 @@ void _gBeginCommon()
   _gTexInit();
   _gCropInit();
   _gScaleInit();
-  
+
   obj_begin = G_TRUE;
 }
 
@@ -482,7 +482,7 @@ void gFlip(bool use_vsync)
   sceGuSync(0,0);
   if (use_vsync) sceDisplayWaitVblankStart();
   sceGuSwapBuffers();
-  
+
   start = G_FALSE;
 }
 
@@ -497,9 +497,9 @@ void gAdd()
     obj_list_size_malloc += MALLOC_STEP;
     obj_list = realloc(obj_list,obj_list_size_malloc * sizeof(Obj_Properties));
   }
-  
+
   obj_list_size++;
-  
+
   CURRENT_OBJ.x = obj_x;
   CURRENT_OBJ.y = obj_y;
   CURRENT_OBJ.z = obj_z;
@@ -514,7 +514,7 @@ void gAdd()
   CURRENT_OBJ.rot_y = obj_y;
   CURRENT_OBJ.rot_sin = obj_rot_sin;
   CURRENT_OBJ.rot_cos = obj_rot_cos;
-  
+
   // Coord mode stuff
   CURRENT_OBJ.x -= (obj_coord_mode == G_UP_RIGHT ||
                     obj_coord_mode == G_DOWN_RIGHT) ?
@@ -1016,12 +1016,12 @@ void gTexFree(gImage** tex)
 gImage* gTexLoad(char path[], bool use_swizzle)
 {
   if (path == NULL) return NULL;
-  
+
   gImage* tex = malloc(sizeof(gImage));
   if (tex == NULL) return NULL;
   FILE* fp = fopen(path,"rb");
   if (fp == NULL) return NULL;
-  
+
   #ifdef USE_PNG
   if (strstr(path,".png") != NULL)
   {
@@ -1037,17 +1037,17 @@ gImage* gTexLoad(char path[], bool use_swizzle)
     tex->can_blend = G_FALSE;
   }
   #endif
-  
+
   fclose(fp);
   sceKernelDcacheWritebackAll();
-  
+
   // The PSP can't draw 512*512+ textures.
   if (tex->w > 512 || tex->h > 512)
   {
     gTexFree(&tex);
     return NULL;
   }
-  
+
   // Swizzling is useless with small textures.
   if (use_swizzle && (tex->w >= 16 || tex->h >= 16))
   {
@@ -1057,7 +1057,7 @@ gImage* gTexLoad(char path[], bool use_swizzle)
     tex->data = (gColor*)tmp;
     tex->swizzled = G_TRUE;
   }
-  
+
   return tex;
 }
 
