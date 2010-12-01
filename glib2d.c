@@ -221,11 +221,11 @@ void* _gSetVertex(void* vp, int i, float vx, float vy)
   // Coord
   v_p_float = (float*)v_p_color;
 
-  v_p_float[0] = I_OBJ.x + vx * I_OBJ.scale_w;
-  v_p_float[1] = I_OBJ.y + vy * I_OBJ.scale_h;
+  v_p_float[0] = I_OBJ.x + (obj_type == RECTANGLES) ? vx * I_OBJ.scale_w : 0;
+  v_p_float[1] = I_OBJ.y + (obj_type == RECTANGLES) ? vy * I_OBJ.scale_h : 0;
 
   // Then apply the rotation
-  if (obj_use_rot)
+  if (obj_use_rot && !(I_OBJ.rot_x == I_OBJ.x && I_OBJ.rot_y == I_OBJ.y))
   {
     float tx = v_p_float[0]-I_OBJ.rot_x, ty = v_p_float[1]-I_OBJ.rot_y;
     v_p_float[0] = I_OBJ.rot_x - I_OBJ.rot_sin*ty + I_OBJ.rot_cos*tx,
