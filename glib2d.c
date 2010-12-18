@@ -455,12 +455,12 @@ void _gEndQuads()
   // Build the vertex list
   for (i=0; i+3<obj_list_size; i+=4)
   {
-      vi = _gSetVertex(vi,i  ,0.f,0.f);
-      vi = _gSetVertex(vi,i+1,1.f,0.f);
-      vi = _gSetVertex(vi,i+3,0.f,1.f);
-      vi = _gSetVertex(vi,i+3,0.f,1.f);
-      vi = _gSetVertex(vi,i+1,1.f,0.f);
-      vi = _gSetVertex(vi,i+2,1.f,1.f);
+    vi = _gSetVertex(vi,i  ,0.f,0.f);
+    vi = _gSetVertex(vi,i+1,1.f,0.f);
+    vi = _gSetVertex(vi,i+3,0.f,1.f);
+    vi = _gSetVertex(vi,i+3,0.f,1.f);
+    vi = _gSetVertex(vi,i+1,1.f,0.f);
+    vi = _gSetVertex(vi,i+2,1.f,1.f);
   }
 
   // Then put it in the display list.

@@ -104,6 +104,21 @@ int main()
     
     gClear(WHITE);
     
+    gBeginQuads(NULL);
+    gSetColor(BLACK);
+    gSetCoordXY(20,12);
+    gAdd();
+    gSetColor(AZURE);
+    gSetCoordXY(100,5);
+    gAdd();
+    gSetColor(RED);
+    gSetCoordXY(80,45);
+    gAdd();
+    gSetColor(CHARTREUSE);
+    gSetCoordXY(30,70);
+    gAdd();
+    gEnd();
+    
     drawBorder();
     drawNeedles();
     

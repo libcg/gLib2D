@@ -128,10 +128,10 @@
  */ 
  
 #define G_MODULATE(color,luminance,alpha) \
-G_RGBA(luminance*G_GET_R(color)/255, \
-       luminance*G_GET_G(color)/255, \
-       luminance*G_GET_B(color)/255, \
-       alpha    *G_GET_A(color)/255)
+G_RGBA((int)(luminance)*G_GET_R(color)/255, \
+       (int)(luminance)*G_GET_G(color)/255, \
+       (int)(luminance)*G_GET_B(color)/255, \
+       (int)(alpha    )*G_GET_A(color)/255)
 
 /**
  * \enum gColors
