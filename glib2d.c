@@ -43,7 +43,7 @@
 #define CURRENT_TRANSFORM transform_stack[transform_stack_size-1]
 #define I_OBJ obj_list[i]
 
-enum Obj_Types { RECTS, LINES, QUADS };
+enum Obj_Types { RECTS, LINES, QUADS, POINTS };
 
 typedef struct
 {
@@ -327,6 +327,16 @@ void gBeginQuads(gImage* tex)
 }
 
 
+void gBeginPoints()
+{
+  if (obj_begin) return;
+
+  obj_type = POINTS;
+  obj_tex = NULL;
+  _gBeginCommon();
+}
+
+
 void _gEndRects()
 {
   // Horror : we need to sort the vertices.
@@ -468,6 +478,35 @@ void _gEndQuads()
 }
 
 
+void _gEndPoints()
+{
+  // Define vertices properties
+  int prim = GU_POINTS,
+      v_obj_nbr = 1,
+      v_nbr = v_obj_nbr * obj_list_size,
+      v_coord_size = 3,
+      v_color_size = (obj_use_vert_color) ? 1 : 0,
+      v_size = v_color_size * sizeof(gColor) +
+               v_coord_size * sizeof(float),
+      v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
+      i;
+
+  if (obj_use_vert_color) v_type |= GU_COLOR_8888;
+
+  // Allocate vertex list memory
+  void *v = sceGuGetMemory(v_nbr * v_size), *vi = v;
+
+  // Build the vertex list
+  for (i=0; i<obj_list_size; i+=1)
+  {
+    vi = _gSetVertex(vi,i,0.f,0.f);
+  }
+
+  // Then put it in the display list.
+  sceGuDrawArray(prim,v_type,v_nbr,NULL,v);
+}
+
+
 void gEnd()
 {
   if (!obj_begin || obj_list_size <= 0)
@@ -498,9 +537,10 @@ void gEnd()
 
   switch (obj_type)
   {
-    case RECTS: _gEndRects(); break;
-    case LINES: _gEndLines(); break;
-    case QUADS: _gEndQuads(); break;
+    case RECTS:  _gEndRects();  break;
+    case LINES:  _gEndLines();  break;
+    case QUADS:  _gEndQuads();  break;
+    case POINTS: _gEndPoints(); break;
   }
 
   sceGuColor(WHITE);

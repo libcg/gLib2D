@@ -271,6 +271,15 @@ void gBeginLines();
 void gBeginQuads(gImage* tex);
 
 /**
+ * \brief Begins points rendering.
+ *
+ * This function begins object rendering. Calls gReset().
+ * One gAdd() calls per object.
+ */
+
+void gBeginPoints();
+
+/**
  * \brief Ends object rendering.
  *
  * This function ends object rendering. Must be called after gBegin*() to add
