@@ -115,7 +115,7 @@ void _gInit()
   sceGuBlendFunc(GU_ADD,GU_SRC_ALPHA,GU_ONE_MINUS_SRC_ALPHA,0,0);
   sceGuTexFunc(GU_TFX_MODULATE,GU_TCC_RGBA);
   sceGuTexFilter(GU_LINEAR,GU_LINEAR);
-  sceGuShadeModel(GU_FLAT);
+  sceGuShadeModel(GU_SMOOTH);
 
   sceGuDisable(GU_CULL_FACE);
   sceGuDisable(GU_CLIP_PLANES);
@@ -660,7 +660,7 @@ void gSetCoordXY(float x, float y)
 {
   obj_x = x;
   obj_y = y;
-  obj_z = 0;
+  obj_z = 0.f;
 }
 
 
