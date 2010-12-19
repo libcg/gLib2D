@@ -73,7 +73,7 @@ static int transform_stack_size;
 static Obj_Properties* obj_list = NULL;
 static gEnum obj_type;
 static int obj_list_size, obj_list_size_malloc; // Real & malloc'ed size
-static bool obj_begin = G_FALSE;
+static bool obj_begin = G_FALSE, obj_line_strip;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
             obj_use_tex, obj_use_tex_linear, obj_use_tex_repeat;
 // * Coord vars *
@@ -307,12 +307,13 @@ void gBeginRects(gImage* tex)
 }
 
 
-void gBeginLines()
+void gBeginLines(bool use_line_strip)
 {
   if (obj_begin) return;
 
   obj_type = LINES;
   obj_tex = NULL;
+  obj_line_strip = use_line_strip;
   _gBeginCommon();
 }
 
@@ -343,12 +344,12 @@ void _gEndRects()
   if (obj_use_z && obj_use_blend) _gVertexSort();
 
   // Define vertices properties
-  int prim = (obj_use_rot) ? GU_TRIANGLES : GU_SPRITES,
-      v_obj_nbr = (obj_use_rot) ? 6 : 2,
+  int prim = (obj_use_rot ? GU_TRIANGLES : GU_SPRITES),
+      v_obj_nbr = (obj_use_rot ? 6 : 2),
       v_nbr,
       v_coord_size = 3,
-      v_tex_size = (obj_use_tex) ? 2 : 0,
-      v_color_size = (obj_use_vert_color) ? 1 : 0,
+      v_tex_size = (obj_use_tex ? 2 : 0),
+      v_color_size = (obj_use_vert_color ? 1 : 0),
       v_size = v_tex_size * sizeof(short) +
                v_color_size * sizeof(gColor) +
                v_coord_size * sizeof(float),
@@ -414,11 +415,12 @@ void _gEndRects()
 void _gEndLines()
 {
   // Define vertices properties
-  int prim = GU_LINES,
-      v_obj_nbr = 2,
-      v_nbr = v_obj_nbr * (obj_list_size / 2),
+  int prim = (obj_line_strip ? GU_LINE_STRIP : GU_LINES),
+      v_obj_nbr = (obj_line_strip ? 1 : 2),
+      v_nbr = v_obj_nbr * (obj_line_strip ? obj_list_size
+                                          : obj_list_size / 2),
       v_coord_size = 3,
-      v_color_size = (obj_use_vert_color) ? 1 : 0,
+      v_color_size = (obj_use_vert_color ? 1 : 0),
       v_size = v_color_size * sizeof(gColor) +
                v_coord_size * sizeof(float),
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
@@ -430,10 +432,21 @@ void _gEndLines()
   void *v = sceGuGetMemory(v_nbr * v_size), *vi = v;
 
   // Build the vertex list
-  for (i=0; i+1<obj_list_size; i+=2)
+  if (obj_line_strip)
   {
-    vi = _gSetVertex(vi,i  ,0.f,0.f);
-    vi = _gSetVertex(vi,i+1,0.f,0.f);
+    vi = _gSetVertex(vi,0,0.f,0.f); 
+    for (i=1; i<obj_list_size; i+=1)
+    {
+      vi = _gSetVertex(vi,i,0.f,0.f);
+    }
+  }
+  else
+  {
+    for (i=0; i+1<obj_list_size; i+=2)
+    {
+      vi = _gSetVertex(vi,i  ,0.f,0.f);
+      vi = _gSetVertex(vi,i+1,0.f,0.f);
+    }
   }
 
   // Then put it in the display list.
@@ -448,8 +461,8 @@ void _gEndQuads()
       v_obj_nbr = 6,
       v_nbr = v_obj_nbr * (obj_list_size / 4),
       v_coord_size = 3,
-      v_tex_size = (obj_use_tex) ? 2 : 0,
-      v_color_size = (obj_use_vert_color) ? 1 : 0,
+      v_tex_size = (obj_use_tex ? 2 : 0),
+      v_color_size = (obj_use_vert_color ? 1 : 0),
       v_size = v_tex_size * sizeof(short) +
                v_color_size * sizeof(gColor) +
                v_coord_size * sizeof(float),
@@ -485,7 +498,7 @@ void _gEndPoints()
       v_obj_nbr = 1,
       v_nbr = v_obj_nbr * obj_list_size,
       v_coord_size = 3,
-      v_color_size = (obj_use_vert_color) ? 1 : 0,
+      v_color_size = (obj_use_vert_color ? 1 : 0),
       v_size = v_color_size * sizeof(gColor) +
                v_coord_size * sizeof(float),
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
@@ -606,33 +619,33 @@ void gAdd()
 
   // Coord mode stuff
   CURRENT_OBJ.x -= (obj_coord_mode == G_UP_RIGHT ||
-                    obj_coord_mode == G_DOWN_RIGHT) ?
+                    obj_coord_mode == G_DOWN_RIGHT ?
                     CURRENT_OBJ.scale_w :
-                   (obj_coord_mode == G_CENTER) ?
-                    CURRENT_OBJ.scale_w/2 : 0;
+                   (obj_coord_mode == G_CENTER ?
+                    CURRENT_OBJ.scale_w/2 : 0));
   CURRENT_OBJ.y -= (obj_coord_mode == G_DOWN_LEFT ||
-                    obj_coord_mode == G_DOWN_RIGHT) ?
+                    obj_coord_mode == G_DOWN_RIGHT ?
                     CURRENT_OBJ.scale_h :
-                   (obj_coord_mode == G_CENTER) ?
-                    CURRENT_OBJ.scale_h/2 : 0;
+                   (obj_coord_mode == G_CENTER ?
+                    CURRENT_OBJ.scale_h/2 : 0));
   // Image inverted
   if (CURRENT_OBJ.scale_w < 0)
   {
     CURRENT_OBJ.x += (obj_coord_mode == G_UP_LEFT ||
-                      obj_coord_mode == G_DOWN_LEFT) ?
+                      obj_coord_mode == G_DOWN_LEFT ?
                       -CURRENT_OBJ.scale_w :
                      (obj_coord_mode == G_UP_RIGHT ||
-                      obj_coord_mode == G_DOWN_RIGHT) ?
-                       CURRENT_OBJ.scale_w : 0;
+                      obj_coord_mode == G_DOWN_RIGHT ?
+                       CURRENT_OBJ.scale_w : 0));
   }
   if (CURRENT_OBJ.scale_h < 0)
   {
     CURRENT_OBJ.y += (obj_coord_mode == G_UP_LEFT ||
-                      obj_coord_mode == G_UP_RIGHT) ?
+                      obj_coord_mode == G_UP_RIGHT ?
                       -CURRENT_OBJ.scale_h :
                      (obj_coord_mode == G_DOWN_LEFT ||
-                      obj_coord_mode == G_DOWN_RIGHT) ?
-                       CURRENT_OBJ.scale_h : 0;
+                      obj_coord_mode == G_DOWN_RIGHT ?
+                       CURRENT_OBJ.scale_h : 0));
   }
   // Alpha stuff
   CURRENT_OBJ.color = G_MODULATE(CURRENT_OBJ.color,255,obj_alpha);

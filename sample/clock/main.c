@@ -30,12 +30,12 @@ void drawBorder() // A circle.
   int i, n = 42;
   float size = 80.f;
   
-  gBeginLines();
+  gBeginLines(G_TRUE);
   
   gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
   gSetColor(LITEGRAY);
   
-  for (i=0; i!=n; i++)
+  for (i=0; i!=n+1; i++)
   {
     gPush();
     gSetCoordXYRelative(0.f,-size,G_TRUE);
@@ -43,11 +43,6 @@ void drawBorder() // A circle.
     gPop();
     
     gSetRotationRelative(360.f/n);
-    
-    gPush();
-    gSetCoordXYRelative(0.f,-size,G_TRUE);
-    gAdd();
-    gPop();
   }  
   
   gEnd();
@@ -56,7 +51,7 @@ void drawBorder() // A circle.
 
 void drawClockHands()
 {
-  gBeginLines();
+  gBeginLines(G_FALSE);
   
   gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
 
@@ -84,9 +79,11 @@ void drawClockHands()
   // Seconds
   gPush();
   gSetColor(RED);
+  gSetAlpha(255);
   gSetRotation(time.seconds*360.f/60.f);
   gAdd();
   gSetCoordXYRelative(0.f,-70.f,G_TRUE);
+  gSetAlpha(100);
   gAdd();
   gPop();
 
