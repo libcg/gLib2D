@@ -12,8 +12,8 @@
  * - Draw & display buffers can't actually be used as real textures. Just a way
  *   to get the vram pointer.
  * - No support for multiples contexts (e.g. sharing coordinates beetween
-     textures using some gBegin calls at a time).
-   - Manipulating textures (clear, get pixel info...) is not possible.
+ *   textures using some gBegin calls at a time).
+ * - Manipulating textures (clear, get pixel info...) is not possible.
  * - When some 512*512 rotated, colorized and scaled textures are rendered
  *   at a time, the framerate *could* go under 60 fps.
  *
@@ -21,7 +21,7 @@
  *
  * - Simply put glib2d.c and glib2d.h in your source directory.\n
  * - Then add glib2d.o and link "-lpng -ljpeg -lz -lpspgu -lm -lpspvram"
-     in your Makefile.
+ *   in your Makefile.
  * - You're done !
  *
  * \section copyright License
