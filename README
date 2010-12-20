@@ -18,7 +18,8 @@ The goals : keep it simple, keep it small, keep it fast.
 * Installation *
 
 - Simply put glib2d.c and glib2d.h in your source directory.
-- Then add glib2d.o and link "-lpng -ljpeg -lz -lpspgu -lm" in your Makefile.
+- Then add glib2d.o and link "-lpng -ljpeg -lz -lpspgu -lm -lpspvram"
+  in your Makefile.
 - You're done !
 
 * License *
