@@ -9,8 +9,11 @@
  *
  * \section limits Known limitations
  *
- * - Only rectangles can be used. Other primitives,
- *   like triangles or lines are just skipped.
+ * - Draw & display buffers can't actually be used as real textures. Just a way
+ *   to get the vram pointer.
+ * - No support for multiples contexts (e.g. sharing coordinates beetween
+     textures using some gBegin calls at a time).
+   - Manipulating textures (clear, get pixel info...) is not possible.
  * - When some 512*512 rotated, colorized and scaled textures are rendered
  *   at a time, the framerate *could* go under 60 fps.
  *
@@ -40,7 +43,7 @@
 /**
  * \file glib2d.h
  * \brief gLib2D Header
- * \version Beta 3
+ * \version Beta 4
  */
 
 #ifndef GLIB2D_H
