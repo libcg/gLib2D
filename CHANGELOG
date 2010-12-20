@@ -1,3 +1,15 @@
+Beta 4 :
+ - Refactored code parts
+ - Corrected a scaling bug
+ - Modified gBegin to gBeginRects
+ - Added line object support (gBeginLines), line strip support
+ - Added quad object support (gBeginQuads)
+ - Added point object support (gBeginPoints)
+ - Added a new "deform" sample
+ - Added texture repeat control (gSetTexRepeat)
+ - Draw & display buffers defined as textures (possibility to get
+   framebuffer pointer)
+
 Beta 3 :
  - Small code cleanup
  - Bug resolved when gAdd() was not called between gBegin()/gEnd()
