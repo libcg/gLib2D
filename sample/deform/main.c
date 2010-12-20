@@ -73,7 +73,7 @@ int main()
     
     // Then the rotating lines.
     
-    gBeginLines();
+    gBeginLines(G_FALSE);
     gSetColor(GRAY);
     
     gSetCoordXY(1*G_SCR_W/4,1*G_SCR_H/4);

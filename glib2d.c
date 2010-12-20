@@ -236,7 +236,7 @@ void* _gSetVertex(void* vp, int i, float vx, float vy)
   v_p_float[1] = I_OBJ.y + (obj_type == RECTS ? vy * I_OBJ.scale_h : 0.f);
 
   // Then apply the rotation
-  if (obj_use_rot && !(I_OBJ.rot_x == I_OBJ.x && I_OBJ.rot_y == I_OBJ.y))
+  if (obj_use_rot && obj_type == RECTS)
   {
     float tx = v_p_float[0]-I_OBJ.rot_x, ty = v_p_float[1]-I_OBJ.rot_y;
     v_p_float[0] = I_OBJ.rot_x - I_OBJ.rot_sin*ty + I_OBJ.rot_cos*tx,

@@ -263,13 +263,13 @@ void gBeginRects(gImage* tex);
 
 /**
  * \brief Begins lines rendering.
- * @param use_stripping Make a line strip ?.
+ * @param use_line_strip Make a line strip ?.
  *
  * This function begins object rendering. Calls gReset().
  * Two gAdd() calls per object.
  */
 
-void gBeginLines(bool use_stripping);
+void gBeginLines(bool use_line_strip);
 
 /**
  * \brief Begins quads rendering.

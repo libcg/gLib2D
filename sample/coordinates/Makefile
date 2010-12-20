@@ -2,7 +2,7 @@ MEDIA = /media/PANDORA/psp/game/CAT_Homebrews\ perso/
 TARGET = gLib2D-coordinates
 
 OBJS = main.o ../../glib2d.o
-LIBS = -ljpeg -lpng -lz -lpspgum -lpspgu -lpsprtc -lm
+LIBS = -ljpeg -lpng -lz -lpspgum -lpspgu -lpsprtc -lm -lpspvram
 
 CFLAGS = -O2 -G0 -Wall
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
