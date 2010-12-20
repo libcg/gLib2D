@@ -94,7 +94,7 @@ void drawClockHands()
 int main()
 {
   SetupCallbacks();
-  
+
   while (1)
   {
     sceRtcGetCurrentClockLocalTime(&time);

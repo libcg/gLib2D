@@ -17,7 +17,8 @@
  * \section install Installation
  *
  * - Simply put glib2d.c and glib2d.h in your source directory.\n
- * - Then add glib2d.o and link "-lpng -ljpeg -lz -lpspgu -lm" in your Makefile.
+ * - Then add glib2d.o and link "-lpng -ljpeg -lz -lpspgu -lm -lpspvram"
+     in your Makefile.
  * - You're done !
  *
  * \section copyright License
@@ -217,6 +218,18 @@ typedef struct
 } gImage;
 
 /**
+ * \var g_draw_buffer
+ * \brief The current draw buffer as a texture.
+ */
+/**
+ * \var g_disp_buffer
+ * \brief The current display buffer as a texture.
+ */
+
+extern gImage g_draw_buffer;
+extern gImage g_disp_buffer;
+
+/**
  * \brief Clears screen & depth buffer, starts rendering.
  * @param color Screen clear color
  *
@@ -256,7 +269,7 @@ void gBeginRects(gImage* tex);
  * Two gAdd() calls per object.
  */
 
-void gBeginLines(bool use_line_strip);
+void gBeginLines(bool use_stripping);
 
 /**
  * \brief Begins quads rendering.

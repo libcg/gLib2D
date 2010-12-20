@@ -10,6 +10,7 @@
 #include <pspkernel.h>
 #include <pspdisplay.h>
 #include <pspgu.h>
+#include <vram.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
@@ -93,6 +94,13 @@ static float obj_rot, obj_rot_sin, obj_rot_cos;
 // * Texture vars *
 static gImage* obj_tex;
 
+gImage g_draw_buffer = { 512, 512, G_SCR_W, G_SCR_H,
+                         (float)G_SCR_W/G_SCR_H, G_FALSE, G_FALSE,
+                         (gColor*)FRAMEBUFFER_SIZE },
+       g_disp_buffer = { 512, 512, G_SCR_W, G_SCR_H,
+                         (float)G_SCR_W/G_SCR_H, G_FALSE, G_FALSE,
+                         (gColor*)0 };
+
 // * Internal functions *
 
 void _gInit()
@@ -101,11 +109,14 @@ void _gInit()
   sceGuInit();
   sceGuStart(GU_DIRECT,list);
 
-  sceGuDrawBuffer(GU_PSM_8888,(void*)FRAMEBUFFER_SIZE,PSP_LINE_SIZE);
-  sceGuDispBuffer(G_SCR_W,G_SCR_H,(void*)0,PSP_LINE_SIZE);
+  sceGuDrawBuffer(GU_PSM_8888,g_draw_buffer.data,PSP_LINE_SIZE);
+  sceGuDispBuffer(G_SCR_W,G_SCR_H,g_disp_buffer.data,PSP_LINE_SIZE);
   sceGuDepthBuffer((void*)(FRAMEBUFFER_SIZE*2),PSP_LINE_SIZE);
   sceGuOffset(2048-(G_SCR_W/2),2048-(G_SCR_H/2));
   sceGuViewport(2048,2048,G_SCR_W,G_SCR_H);
+
+  g_draw_buffer.data = vabsptr(g_draw_buffer.data);
+  g_disp_buffer.data = vabsptr(g_disp_buffer.data);
 
   gResetScissor();
   sceGuDepthRange(65535,0);
@@ -583,7 +594,9 @@ void gFlip(bool use_vsync)
   sceGuFinish();
   sceGuSync(0,0);
   if (use_vsync) sceDisplayWaitVblankStart();
-  sceGuSwapBuffers();
+  
+  g_disp_buffer.data = g_draw_buffer.data;
+  g_draw_buffer.data = vabsptr(sceGuSwapBuffers());
 
   start = G_FALSE;
 }
