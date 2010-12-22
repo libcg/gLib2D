@@ -133,6 +133,7 @@ void _gInit()
   sceGuDisable(GU_DITHER);
   sceGuEnable(GU_ALPHA_TEST);
   sceGuEnable(GU_SCISSOR_TEST);
+  sceGuEnable(GU_BLEND);
 
   sceGuFinish();
   sceGuSync(0,0);
