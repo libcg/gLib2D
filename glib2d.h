@@ -438,24 +438,22 @@ void gSetCoordXYZ(float x, float y, float z);
  * \brief Sets the new position, relative to the current.
  * @param x New x increment, in pixels.
  * @param y New y increment, in pixels.
- * @param use_rot Take account of the rotation ?
  *
  * This function must be called during object rendering.
  */
 
-void gSetCoordXYRelative(float x, float y, bool use_rot);
+void gSetCoordXYRelative(float x, float y);
 
 /**
  * \brief Sets the new position, with depth support, relative to the current.
  * @param x New x increment, in pixels.
  * @param y New y increment, in pixels.
  * @param z New z increment, in pixels.
- * @param use_rot Take account of the rotation ?
  *
  * This function must be called during object rendering.
  */
 
-void gSetCoordXYZRelative(float x, float y, float z, bool use_rot);
+void gSetCoordXYZRelative(float x, float y, float z);
 
 /**
  * \brief Resets the current scale.

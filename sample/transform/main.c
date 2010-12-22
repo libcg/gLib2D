@@ -49,17 +49,17 @@ int main()
     {
       gPush();
       gSetAlpha(200);
-      gSetCoordXYRelative(30,0,G_TRUE);
+      gSetCoordXYRelative(30,0);
       gAdd();
       
       gPush();
       gSetAlpha(127);
-      gSetCoordXYRelative(30,-10,G_TRUE);
+      gSetCoordXYRelative(30,-10);
       gAdd();
       
       gPop();
       gSetScaleWH(5,5);
-      gSetCoordXYRelative(30,10,G_TRUE);
+      gSetCoordXYRelative(30,10);
       gAdd();
       
       gPop();

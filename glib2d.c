@@ -740,20 +740,20 @@ void gSetCoordXYZ(float x, float y, float z)
 }
 
 
-void gSetCoordXYRelative(float x, float y, bool use_rot)
+void gSetCoordXYRelative(float x, float y)
 {
-  if (!use_rot) gSetCoordXY(obj_x + x, obj_y + y);
-  else          gSetCoordXY(obj_x - obj_rot_sin*y + obj_rot_cos*x,
-                            obj_y + obj_rot_cos*y + obj_rot_sin*x);
+  if (obj_rot_cos == 1.f) gSetCoordXY(obj_x + x, obj_y + y);
+  else                     gSetCoordXY(obj_x - obj_rot_sin*y + obj_rot_cos*x,
+                                       obj_y + obj_rot_cos*y + obj_rot_sin*x);
 }
 
 
-void gSetCoordXYZRelative(float x, float y, float z, bool use_rot)
+void gSetCoordXYZRelative(float x, float y, float z)
 {
-  if (!use_rot) gSetCoordXYZ(obj_x + x, obj_y + y,obj_z + z);
-  else          gSetCoordXYZ(obj_x - obj_rot_sin*y + obj_rot_cos*x,
-                             obj_y + obj_rot_cos*y + obj_rot_sin*x,
-                             obj_z + z);
+  if (obj_rot_cos == 1.f) gSetCoordXYZ(obj_x + x, obj_y + y,obj_z + z);
+  else                    gSetCoordXYZ(obj_x - obj_rot_sin*y + obj_rot_cos*x,
+                                       obj_y + obj_rot_cos*y + obj_rot_sin*x,
+                                       obj_z + z);
 }
 
 // * Scale functions *

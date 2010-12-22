@@ -41,7 +41,7 @@ int main()
     gSetCoordXY(1*G_SCR_W/4,1*G_SCR_H/4);
     gPush();
     gSetRotation(rot);
-    gSetCoordXYRelative(45,0,G_TRUE);
+    gSetCoordXYRelative(45,0);
     gAdd();
     gPop();
     
@@ -49,7 +49,7 @@ int main()
     gSetCoordXY(3*G_SCR_W/4,1*G_SCR_H/4);
     gPush();
     gSetRotation(2.f*rot);
-    gSetCoordXYRelative(55,0,G_TRUE);
+    gSetCoordXYRelative(55,0);
     gAdd();
     gPop();
     
@@ -57,7 +57,7 @@ int main()
     gSetCoordXY(3*G_SCR_W/4,3*G_SCR_H/4);
     gPush();
     gSetRotation(-rot);
-    gSetCoordXYRelative(23,0,G_TRUE);
+    gSetCoordXYRelative(23,0);
     gAdd();
     gPop();
     
@@ -65,7 +65,7 @@ int main()
     gSetCoordXY(1*G_SCR_W/4,3*G_SCR_H/4);
     gPush();
     gSetRotation(-3.f*rot);
-    gSetCoordXYRelative(30,0,G_TRUE);
+    gSetCoordXYRelative(30,0);
     gAdd();
     gPop();
     
@@ -80,7 +80,7 @@ int main()
     gAdd();
     gPush();
     gSetRotation(rot);
-    gSetCoordXYRelative(45,0,G_TRUE);
+    gSetCoordXYRelative(45,0);
     gAdd();
     gPop();
     
@@ -88,7 +88,7 @@ int main()
     gAdd();
     gPush();
     gSetRotation(2.f*rot);
-    gSetCoordXYRelative(55,0,G_TRUE);
+    gSetCoordXYRelative(55,0);
     gAdd();
     gPop();
     
@@ -96,7 +96,7 @@ int main()
     gAdd();
     gPush();
     gSetRotation(-rot);
-    gSetCoordXYRelative(23,0,G_TRUE);
+    gSetCoordXYRelative(23,0);
     gAdd();
     gPop();
     
@@ -104,7 +104,7 @@ int main()
     gAdd();
     gPush();
     gSetRotation(-3.f*rot);
-    gSetCoordXYRelative(30,0,G_TRUE);
+    gSetCoordXYRelative(30,0);
     gAdd();
     gPop();
     
