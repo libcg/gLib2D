@@ -181,6 +181,8 @@ enum gColors
  * \brief Line modes enumeration.
  * \enum gFlip_Mode
  * \brief Flip modes enumeration.
+ * \enum gTex_Mode
+ * \brief Texture modes enumeration.
  *
  * Choose where the coordinates correspond in the object.
  * This can be a corner or the center.
