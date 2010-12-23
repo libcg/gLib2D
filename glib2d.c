@@ -319,13 +319,13 @@ void gBeginRects(gImage* tex)
 }
 
 
-void gBeginLines(bool use_line_strip)
+void gBeginLines(gEnum line_mode)
 {
   if (obj_begin) return;
 
   obj_type = LINES;
   obj_tex = NULL;
-  obj_line_strip = use_line_strip;
+  obj_line_strip = (line_mode & G_STRIP);
   _gBeginCommon();
 }
 
@@ -588,13 +588,13 @@ void gReset()
 }
 
 
-void gFlip(bool use_vsync)
+void gFlip(gEnum flip_mode)
 {
   if (scissor) gResetScissor();
 
   sceGuFinish();
   sceGuSync(0,0);
-  if (use_vsync) sceDisplayWaitVblankStart();
+  if (flip_mode & G_VSYNC) sceDisplayWaitVblankStart();
   
   g_disp_buffer.data = g_draw_buffer.data;
   g_draw_buffer.data = vabsptr(sceGuSwapBuffers());
@@ -708,10 +708,10 @@ void gResetCoord()
 }
 
 
-void gSetCoordMode(gEnum mode)
+void gSetCoordMode(gEnum coord_mode)
 {
-  if (mode < G_UP_LEFT || mode > G_CENTER) return;
-  obj_coord_mode = mode;
+  if (coord_mode < G_UP_LEFT || coord_mode > G_CENTER) return;
+  obj_coord_mode = coord_mode;
 }
 
 
@@ -1129,7 +1129,7 @@ void gTexFree(gImage** tex)
 }
 
 
-gImage* gTexLoad(char path[], bool use_swizzle)
+gImage* gTexLoad(char path[], gEnum tex_mode)
 {
   if (path == NULL) return NULL;
 
@@ -1165,7 +1165,7 @@ gImage* gTexLoad(char path[], bool use_swizzle)
   }
 
   // Swizzling is useless with small textures.
-  if (use_swizzle && (tex->w >= 16 || tex->h >= 16))
+  if ((tex_mode & G_SWIZZLE) && (tex->w >= 16 || tex->h >= 16))
   {
     u8* tmp = malloc(tex->tw*tex->th*PIXEL_SIZE);
     _swizzle(tmp,(u8*)tex->data,tex->tw*PIXEL_SIZE,tex->th);

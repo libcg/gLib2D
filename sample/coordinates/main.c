@@ -1,5 +1,5 @@
 // gSetCoordMode use.
-// The rotation center are coordinates passed to gSetCoord*.
+// The rotation center is coordinates passed to gSetCoord*.
 
 #include <pspkernel.h>
 #include "../../glib2d.h"
@@ -65,7 +65,7 @@ int main()
     
     gEnd();
     
-    gFlip(G_TRUE); // Vsync enabled
+    gFlip(G_VSYNC);
   }
     
   sceKernelExitGame();

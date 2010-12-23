@@ -30,7 +30,7 @@ void drawBorder() // A circle.
   int i, n = 42;
   float size = 80.f;
   
-  gBeginLines(G_TRUE);
+  gBeginLines(G_STRIP);
   
   gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
   gSetColor(LITEGRAY);
@@ -51,7 +51,7 @@ void drawBorder() // A circle.
 
 void drawClockHands()
 {
-  gBeginLines(G_FALSE);
+  gBeginLines(G_VOID);
   
   gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
 
@@ -104,7 +104,7 @@ int main()
     drawBorder();
     drawClockHands();
     
-    gFlip(G_TRUE); // Vsync enabled
+    gFlip(G_VSYNC);
   }
     
   sceKernelExitGame();

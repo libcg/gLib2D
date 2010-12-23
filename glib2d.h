@@ -84,12 +84,17 @@
 /**
  * \def G_TRUE
  * \brief Boolean constant, true or 1
+ */
+/**
+ * \def G_VOID
+ * \brief Generic gEnum constant, equals to 0 (do nothing)
  */ 
  
 #define G_SCR_W (480)
 #define G_SCR_H (272)
 #define G_FALSE 0
 #define G_TRUE !0
+#define G_VOID 0
 
 /**
  * \def G_RGBA(r,g,b,a)
@@ -172,14 +177,37 @@ enum gColors
 /**
  * \enum gCoord_Mode
  * \brief Coord modes enumeration.
+ * \enum gLine_Mode
+ * \brief Line modes enumeration.
+ * \enum gFlip_Mode
+ * \brief Flip modes enumeration.
  *
  * Choose where the coordinates correspond in the object.
  * This can be a corner or the center.
  */ 
  
-enum gCoord_Mode { G_UP_LEFT, G_UP_RIGHT, 
-                    G_DOWN_RIGHT, G_DOWN_LEFT,
-                    G_CENTER };
+enum gCoord_Mode
+{ 
+  G_UP_LEFT, G_UP_RIGHT, 
+  G_DOWN_RIGHT, G_DOWN_LEFT,
+  G_CENTER
+};
+
+enum gLine_Mode
+{ 
+  G_STRIP = 1 /**< Make a line strip. */
+};
+
+enum gFlip_Mode
+{
+  G_VSYNC = 1 /**< Limit the FPS to 60.
+                   Better image quality and less power consumption */
+};
+
+enum gTex_Mode
+{
+  G_SWIZZLE = 1 /**< Recommended. Use it to get *more* speed. */
+};
 
 /**
  * \var bool
@@ -266,13 +294,13 @@ void gBeginRects(gImage* tex);
 
 /**
  * \brief Begins lines rendering.
- * @param use_line_strip Make a line strip ?.
+ * @param line_mode A gLine_Mode constant.
  *
  * This function begins object rendering. Calls gReset().
  * Two gAdd() calls per object.
  */
 
-void gBeginLines(bool use_line_strip);
+void gBeginLines(gEnum line_mode);
 
 /**
  * \brief Begins quads rendering.
@@ -318,13 +346,13 @@ void gReset();
 
 /**
  * \brief Flips the screen.
- * @param use_vsync Limit FPS to 60 ?
+ * @param flip_mode A gFlip_Mode constant.
  *
  * This function must be called at the end of the loop.
  * Inverts screen buffers to display the whole thing.
  */
 
-void gFlip(bool use_vsync);
+void gFlip(gEnum flip_mode);
 
 /**
  * \brief Pushes the current transformation & attribution to a new object.
@@ -369,8 +397,7 @@ void gTexFree(gImage** tex);
 /**
  * \brief Loads an image.
  * @param path Path to the file.
- * @param use_swizzle Pass G_TRUE to get *more* speed (recommended).
- *                    Pass G_FALSE to avoid artifacts.
+ * @param tex_mode A gTex_Mode constant.
  * @returns Pointer to the image.
  *
  * This function loads an image file. There is support for PNG & JPEG files
@@ -378,7 +405,7 @@ void gTexFree(gImage** tex);
  * textures (useless on small textures). Image support up to 512*512 only.
  */
 
-gImage* gTexLoad(char path[], bool use_swizzle);
+gImage* gTexLoad(char path[], gEnum tex_mode);
 
 /**
  * \brief Resets the current coordinates.
@@ -398,7 +425,7 @@ void gResetCoord();
  * Works even if the texture is inverted.
  */
 
-void gSetCoordMode(gEnum mode);
+void gSetCoordMode(gEnum coord_mode);
 
 /**
  * \brief Gets the current position.

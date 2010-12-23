@@ -45,7 +45,7 @@ int main()
     gAdd();
     gEnd();
     
-    gFlip(G_TRUE); // Vsync enabled
+    gFlip(G_VSYNC);
   }
     
   sceKernelExitGame();

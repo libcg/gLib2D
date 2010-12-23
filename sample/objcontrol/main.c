@@ -28,7 +28,7 @@ int main()
   SetupCallbacks();
   
   SceCtrlData pad;
-  gImage* tex = gTexLoad("tex.png",G_TRUE);
+  gImage* tex = gTexLoad("tex.png",G_SWIZZLE);
   int alpha = 255, x = G_SCR_W/2, y = G_SCR_H/2,
       w = tex->w, h = tex->h, rot = 0;
 
@@ -62,7 +62,7 @@ int main()
     gAdd();
     gEnd();
     
-    gFlip(G_TRUE); // Vsync enabled
+    gFlip(G_VSYNC); // Vsync enabled
   }
     
   sceKernelExitGame();
