@@ -73,7 +73,7 @@ static int transform_stack_size;
 // * Object vars *
 static Obj_Properties* obj_list = NULL;
 static gEnum obj_type;
-static int obj_list_size, obj_list_size_malloc; // Real & malloc'ed size
+static int obj_list_size;
 static bool obj_begin = G_FALSE, obj_line_strip;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
             obj_use_tex, obj_use_tex_linear, obj_use_tex_repeat;
@@ -294,8 +294,7 @@ void _gBeginCommon()
   if (!start) _gStart();
 
   obj_list_size = 0;
-  obj_list_size_malloc = MALLOC_STEP;
-  obj_list = realloc(obj_list,obj_list_size_malloc * sizeof(Obj_Properties));
+  obj_list = realloc(obj_list,MALLOC_STEP * sizeof(Obj_Properties));
 
   _gCoordInit();
   _gColorInit();
@@ -608,10 +607,10 @@ void gAdd()
   if (!obj_begin) return;
   if (obj_scale_w == 0 || obj_scale_h == 0) return;
 
-  if (obj_list_size >= obj_list_size_malloc)
+  if (!(obj_list_size % MALLOC_STEP))
   {
-    obj_list_size_malloc += MALLOC_STEP;
-    obj_list = realloc(obj_list,obj_list_size_malloc * sizeof(Obj_Properties));
+    obj_list = realloc(obj_list,(obj_list_size+MALLOC_STEP) *
+                                sizeof(Obj_Properties));
   }
 
   obj_list_size++;

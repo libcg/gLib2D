@@ -203,7 +203,7 @@ enum gLine_Mode
 enum gFlip_Mode
 {
   G_VSYNC = 1 /**< Limit the FPS to 60.
-                   Better image quality and less power consumption */
+                   Better image quality and less power consumption. */
 };
 
 enum gTex_Mode
