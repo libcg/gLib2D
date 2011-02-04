@@ -1171,7 +1171,9 @@ gImage* gTexLoad(char path[], gEnum tex_mode)
     free(tex->data);
     tex->data = (gColor*)tmp;
     tex->swizzled = G_TRUE;
+    sceKernelDcacheWritebackAll();
   }
+  else tex->swizzled = G_FALSE;
 
   return tex;
 }
