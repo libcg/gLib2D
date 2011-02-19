@@ -66,7 +66,7 @@ typedef struct
 
 
 // * Main vars *
-static unsigned int __attribute__((aligned(16))) list[262144];
+static int* list;
 static bool init = G_FALSE, start = G_FALSE, zclear = G_TRUE, scissor = G_FALSE;
 static Transform transform_stack[TRANSFORM_STACK_MAX];
 static int transform_stack_size;
@@ -105,6 +105,9 @@ gImage g_draw_buffer = { 512, 512, G_SCR_W, G_SCR_H,
 
 void _gInit()
 {
+  // Display list allocation
+  list = memalign(16,262144*sizeof(int));
+
   // Init & setup GU
   sceGuInit();
   sceGuStart(GU_DIRECT,list);
