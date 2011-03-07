@@ -31,86 +31,86 @@ int main()
   {
     if ((rot++) > 360) rot -= 360;
     
-    gClear(WHITE);
+    g2dClear(WHITE);
     
     // Draw the quad
     
-    gBeginQuads(NULL); // Can be also textured
+    g2dBeginQuads(NULL); // Can be also textured
     
-    gSetColor(RED);
-    gSetCoordXY(1*G_SCR_W/4,1*G_SCR_H/4);
-    gPush();
-    gSetRotation(rot);
-    gSetCoordXYRelative(45,0);
-    gAdd();
-    gPop();
+    g2dSetColor(RED);
+    g2dSetCoordXY(1*G2D_SCR_W/4,1*G2D_SCR_H/4);
+    g2dPush();
+    g2dSetRotation(rot);
+    g2dSetCoordXYRelative(45,0);
+    g2dAdd();
+    g2dPop();
     
-    gSetColor(GREEN);
-    gSetCoordXY(3*G_SCR_W/4,1*G_SCR_H/4);
-    gPush();
-    gSetRotation(2.f*rot);
-    gSetCoordXYRelative(55,0);
-    gAdd();
-    gPop();
+    g2dSetColor(GREEN);
+    g2dSetCoordXY(3*G2D_SCR_W/4,1*G2D_SCR_H/4);
+    g2dPush();
+    g2dSetRotation(2.f*rot);
+    g2dSetCoordXYRelative(55,0);
+    g2dAdd();
+    g2dPop();
     
-    gSetColor(BLUE);
-    gSetCoordXY(3*G_SCR_W/4,3*G_SCR_H/4);
-    gPush();
-    gSetRotation(-rot);
-    gSetCoordXYRelative(23,0);
-    gAdd();
-    gPop();
+    g2dSetColor(BLUE);
+    g2dSetCoordXY(3*G2D_SCR_W/4,3*G2D_SCR_H/4);
+    g2dPush();
+    g2dSetRotation(-rot);
+    g2dSetCoordXYRelative(23,0);
+    g2dAdd();
+    g2dPop();
     
-    gSetColor(BLACK);
-    gSetCoordXY(1*G_SCR_W/4,3*G_SCR_H/4);
-    gPush();
-    gSetRotation(-3.f*rot);
-    gSetCoordXYRelative(30,0);
-    gAdd();
-    gPop();
+    g2dSetColor(BLACK);
+    g2dSetCoordXY(1*G2D_SCR_W/4,3*G2D_SCR_H/4);
+    g2dPush();
+    g2dSetRotation(-3.f*rot);
+    g2dSetCoordXYRelative(30,0);
+    g2dAdd();
+    g2dPop();
     
-    gEnd();
+    g2dEnd();
     
     // Then the rotating lines.
     
-    gBeginLines(G_FALSE);
-    gSetColor(GRAY);
+    g2dBeginLines(G2D_FALSE);
+    g2dSetColor(GRAY);
     
-    gSetCoordXY(1*G_SCR_W/4,1*G_SCR_H/4);
-    gAdd();
-    gPush();
-    gSetRotation(rot);
-    gSetCoordXYRelative(45,0);
-    gAdd();
-    gPop();
+    g2dSetCoordXY(1*G2D_SCR_W/4,1*G2D_SCR_H/4);
+    g2dAdd();
+    g2dPush();
+    g2dSetRotation(rot);
+    g2dSetCoordXYRelative(45,0);
+    g2dAdd();
+    g2dPop();
     
-    gSetCoordXY(3*G_SCR_W/4,1*G_SCR_H/4);
-    gAdd();
-    gPush();
-    gSetRotation(2.f*rot);
-    gSetCoordXYRelative(55,0);
-    gAdd();
-    gPop();
+    g2dSetCoordXY(3*G2D_SCR_W/4,1*G2D_SCR_H/4);
+    g2dAdd();
+    g2dPush();
+    g2dSetRotation(2.f*rot);
+    g2dSetCoordXYRelative(55,0);
+    g2dAdd();
+    g2dPop();
     
-    gSetCoordXY(3*G_SCR_W/4,3*G_SCR_H/4);
-    gAdd();
-    gPush();
-    gSetRotation(-rot);
-    gSetCoordXYRelative(23,0);
-    gAdd();
-    gPop();
+    g2dSetCoordXY(3*G2D_SCR_W/4,3*G2D_SCR_H/4);
+    g2dAdd();
+    g2dPush();
+    g2dSetRotation(-rot);
+    g2dSetCoordXYRelative(23,0);
+    g2dAdd();
+    g2dPop();
     
-    gSetCoordXY(1*G_SCR_W/4,3*G_SCR_H/4);
-    gAdd();
-    gPush();
-    gSetRotation(-3.f*rot);
-    gSetCoordXYRelative(30,0);
-    gAdd();
-    gPop();
+    g2dSetCoordXY(1*G2D_SCR_W/4,3*G2D_SCR_H/4);
+    g2dAdd();
+    g2dPush();
+    g2dSetRotation(-3.f*rot);
+    g2dSetCoordXYRelative(30,0);
+    g2dAdd();
+    g2dPop();
     
-    gEnd();
+    g2dEnd();
     
-    gFlip(G_VSYNC);
+    g2dFlip(G2D_VSYNC);
   }
     
   sceKernelExitGame();

@@ -32,40 +32,40 @@ int main()
   {
     if ((rot++) > 360) rot -= 360;
     
-    gClear(WHITE);
+    g2dClear(WHITE);
 
-    gBeginRects(NULL);
-    gSetScaleWH(42,42);
-    gSetColor(RED);
+    g2dBeginRects(NULL);
+    g2dSetScaleWH(42,42);
+    g2dSetColor(RED);
     
-    gSetCoordMode(G_UP_LEFT);
-    gSetCoordXY(0,0); 
-    gSetRotation(rot);
-    gAdd();
+    g2dSetCoordMode(G2D_UP_LEFT);
+    g2dSetCoordXY(0,0); 
+    g2dSetRotation(rot);
+    g2dAdd();
 
-    gSetCoordMode(G_UP_RIGHT);
-    gSetCoordXY(G_SCR_W,0);
-    gSetRotation(-rot);
-    gAdd();
+    g2dSetCoordMode(G2D_UP_RIGHT);
+    g2dSetCoordXY(G2D_SCR_W,0);
+    g2dSetRotation(-rot);
+    g2dAdd();
 
-    gSetCoordMode(G_DOWN_RIGHT);
-    gSetCoordXY(G_SCR_W,G_SCR_H);
-    gSetRotation(rot);
-    gAdd();
+    g2dSetCoordMode(G2D_DOWN_RIGHT);
+    g2dSetCoordXY(G2D_SCR_W,G2D_SCR_H);
+    g2dSetRotation(rot);
+    g2dAdd();
 
-    gSetCoordMode(G_DOWN_LEFT);
-    gSetCoordXY(0,G_SCR_H);
-    gSetRotation(-rot); 
-    gAdd();
+    g2dSetCoordMode(G2D_DOWN_LEFT);
+    g2dSetCoordXY(0,G2D_SCR_H);
+    g2dSetRotation(-rot); 
+    g2dAdd();
 
-    gSetCoordMode(G_CENTER);
-    gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
-    gSetRotation(rot);
-    gAdd();
+    g2dSetCoordMode(G2D_CENTER);
+    g2dSetCoordXY(G2D_SCR_W/2,G2D_SCR_H/2);
+    g2dSetRotation(rot);
+    g2dAdd();
     
-    gEnd();
+    g2dEnd();
     
-    gFlip(G_VSYNC);
+    g2dFlip(G2D_VSYNC);
   }
     
   sceKernelExitGame();

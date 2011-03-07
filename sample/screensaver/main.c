@@ -32,20 +32,20 @@ int main()
   {
     x += dx;
     y += dy;
-    if (x < 0 || x+size > G_SCR_W) dx = -dx; 
-    if (y < 0 || y+size > G_SCR_H) dy = -dy;
+    if (x < 0 || x+size > G2D_SCR_W) dx = -dx; 
+    if (y < 0 || y+size > G2D_SCR_H) dy = -dy;
      
-    gClear(WHITE);
+    g2dClear(WHITE);
     
-    gBeginRects(NULL); // No texture
-    gSetColor(AZURE);
-    gSetScaleWH(size,size);
-    gSetCoordXY(x,y);
-    gSetAlpha(x*255/G_SCR_W); // Useless alpha effect ;)
-    gAdd();
-    gEnd();
+    g2dBeginRects(NULL); // No texture
+    g2dSetColor(AZURE);
+    g2dSetScaleWH(size,size);
+    g2dSetCoordXY(x,y);
+    g2dSetAlpha(x*255/G2D_SCR_W); // Useless alpha effect ;)
+    g2dAdd();
+    g2dEnd();
     
-    gFlip(G_VSYNC);
+    g2dFlip(G2D_VSYNC);
   }
     
   sceKernelExitGame();

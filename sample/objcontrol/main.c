@@ -28,8 +28,8 @@ int main()
   SetupCallbacks();
   
   SceCtrlData pad;
-  gImage* tex = gTexLoad("tex.png",G_SWIZZLE);
-  int alpha = 255, x = G_SCR_W/2, y = G_SCR_H/2,
+  g2dImage* tex = g2dTexLoad("tex.png",G2D_SWIZZLE);
+  int alpha = 255, x = G2D_SCR_W/2, y = G2D_SCR_H/2,
       w = tex->w, h = tex->h, rot = 0;
 
   while (1)
@@ -50,19 +50,19 @@ int main()
     if (pad.Buttons & PSP_CTRL_RTRIGGER) rot+=2;
     
     // Display
-    gClear(WHITE);
+    g2dClear(WHITE);
     
-    gBeginRects(tex);
-    if (tex == NULL) gSetColor(RED);
-    gSetCoordMode(G_CENTER);
-    gSetAlpha(alpha);
-    gSetScaleWH(w,h);
-    gSetCoordXY(x,y);
-    gSetRotation(rot);
-    gAdd();
-    gEnd();
+    g2dBeginRects(tex);
+    if (tex == NULL) g2dSetColor(RED);
+    g2dSetCoordMode(G2D_CENTER);
+    g2dSetAlpha(alpha);
+    g2dSetScaleWH(w,h);
+    g2dSetCoordXY(x,y);
+    g2dSetRotation(rot);
+    g2dAdd();
+    g2dEnd();
     
-    gFlip(G_VSYNC);
+    g2dFlip(G2D_VSYNC);
   }
     
   sceKernelExitGame();

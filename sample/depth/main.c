@@ -30,31 +30,31 @@ int main()
   
   while (1)
   {
-    gClear(BLACK); // Clears zbuffer since Z coordinate is used in the loop
+    g2dClear(BLACK); // Clears zbuffer since Z coordinate is used in the loop
     
-    gBeginRects(NULL);
+    g2dBeginRects(NULL);
     
-    gSetColor(AZURE);
-    gSetAlpha(255);
-    gSetScaleWH(50,50);
-    gSetCoordXYZ(195,50,0);
-    gAdd();
+    g2dSetColor(AZURE);
+    g2dSetAlpha(255);
+    g2dSetScaleWH(50,50);
+    g2dSetCoordXYZ(195,50,0);
+    g2dAdd();
 
-    gSetColor(CHARTREUSE);
-    gSetAlpha(200);
-    gSetScaleWH(200,100);
-    gSetCoordXYZ(20,20,0);
-    gAdd();
+    g2dSetColor(CHARTREUSE);
+    g2dSetAlpha(200);
+    g2dSetScaleWH(200,100);
+    g2dSetCoordXYZ(20,20,0);
+    g2dAdd();
 
-    gSetColor(0xFFDDEEFF);
-    gSetAlpha(127);
-    gSetScaleWH(100,67);
-    gSetCoordXYZ(170,60,1);
-    gAdd();
+    g2dSetColor(0xFFDDEEFF);
+    g2dSetAlpha(127);
+    g2dSetScaleWH(100,67);
+    g2dSetCoordXYZ(170,60,1);
+    g2dAdd();
     
-    gEnd();
+    g2dEnd();
     
-    gFlip(G_VSYNC);
+    g2dFlip(G2D_VSYNC);
   }
     
   sceKernelExitGame();

@@ -33,42 +33,42 @@ int main()
   {
     if ((rot++) > 360) rot -= 360;
     
-    gClear(WHITE);
+    g2dClear(WHITE);
     
-    gBeginRects(NULL);
+    g2dBeginRects(NULL);
     
-    gSetScaleWH(15,15);
-    gSetCoordMode(G_CENTER);
-    gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
-    gSetRotation(rot);
-    gSetColor(AZURE);
-    gAdd();
-    gSetRotation(-rot);
+    g2dSetScaleWH(15,15);
+    g2dSetCoordMode(G2D_CENTER);
+    g2dSetCoordXY(G2D_SCR_W/2,G2D_SCR_H/2);
+    g2dSetRotation(rot);
+    g2dSetColor(AZURE);
+    g2dAdd();
+    g2dSetRotation(-rot);
     
     for (i=0; i!=branches; i++)
     {
-      gPush();
-      gSetAlpha(200);
-      gSetCoordXYRelative(30,0);
-      gAdd();
+      g2dPush();
+      g2dSetAlpha(200);
+      g2dSetCoordXYRelative(30,0);
+      g2dAdd();
       
-      gPush();
-      gSetAlpha(127);
-      gSetCoordXYRelative(30,-10);
-      gAdd();
+      g2dPush();
+      g2dSetAlpha(127);
+      g2dSetCoordXYRelative(30,-10);
+      g2dAdd();
       
-      gPop();
-      gSetScaleWH(5,5);
-      gSetCoordXYRelative(30,10);
-      gAdd();
+      g2dPop();
+      g2dSetScaleWH(5,5);
+      g2dSetCoordXYRelative(30,10);
+      g2dAdd();
       
-      gPop();
-      gSetRotationRelative(360/branches);
+      g2dPop();
+      g2dSetRotationRelative(360/branches);
     }
     
-    gEnd();
+    g2dEnd();
     
-    gFlip(G_VSYNC);
+    g2dFlip(G2D_VSYNC);
   }
     
   sceKernelExitGame();

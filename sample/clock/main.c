@@ -30,64 +30,64 @@ void drawBorder() // A circle.
   int i, n = 42;
   float size = 80.f;
   
-  gBeginLines(G_STRIP);
+  g2dBeginLines(G2D_STRIP);
   
-  gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
-  gSetColor(LITEGRAY);
+  g2dSetCoordXY(G2D_SCR_W/2,G2D_SCR_H/2);
+  g2dSetColor(LITEGRAY);
   
   for (i=0; i!=n+1; i++)
   {
-    gPush();
-    gSetCoordXYRelative(0.f,-size);
-    gAdd();
-    gPop();
+    g2dPush();
+    g2dSetCoordXYRelative(0.f,-size);
+    g2dAdd();
+    g2dPop();
     
-    gSetRotationRelative(360.f/n);
+    g2dSetRotationRelative(360.f/n);
   }  
   
-  gEnd();
+  g2dEnd();
 }
 
 
 void drawClockHands()
 {
-  gBeginLines(G_VOID);
+  g2dBeginLines(G2D_VOID);
   
-  gSetCoordXY(G_SCR_W/2,G_SCR_H/2);
+  g2dSetCoordXY(G2D_SCR_W/2,G2D_SCR_H/2);
 
   // Hours
-  gPush();
-  gSetColor(BLACK);
-  gSetRotation((time.hour%12+
+  g2dPush();
+  g2dSetColor(BLACK);
+  g2dSetRotation((time.hour%12+
                 time.minutes/60.f+
                 time.seconds/3600.f)*360.f/12.f);
-  gAdd();
-  gSetCoordXYRelative(0.f,-30.f);
-  gAdd();
-  gPop();
+  g2dAdd();
+  g2dSetCoordXYRelative(0.f,-30.f);
+  g2dAdd();
+  g2dPop();
   
   // Minutes
-  gPush();
-  gSetColor(BLACK);
-  gSetRotation((time.minutes+
+  g2dPush();
+  g2dSetColor(BLACK);
+  g2dSetRotation((time.minutes+
                 time.seconds/60.f)*360.f/60.f);
-  gAdd();
-  gSetCoordXYRelative(0.f,-70.f);
-  gAdd();
-  gPop();
+  g2dAdd();
+  g2dSetCoordXYRelative(0.f,-70.f);
+  g2dAdd();
+  g2dPop();
   
   // Seconds
-  gPush();
-  gSetColor(RED);
-  gSetAlpha(255);
-  gSetRotation(time.seconds*360.f/60.f);
-  gAdd();
-  gSetCoordXYRelative(0.f,-70.f);
-  gSetAlpha(100);
-  gAdd();
-  gPop();
+  g2dPush();
+  g2dSetColor(RED);
+  g2dSetAlpha(255);
+  g2dSetRotation(time.seconds*360.f/60.f);
+  g2dAdd();
+  g2dSetCoordXYRelative(0.f,-70.f);
+  g2dSetAlpha(100);
+  g2dAdd();
+  g2dPop();
 
-  gEnd();
+  g2dEnd();
 }
 
 
@@ -99,12 +99,12 @@ int main()
   {
     sceRtcGetCurrentClockLocalTime(&time);
     
-    gClear(WHITE);
+    g2dClear(WHITE);
     
     drawBorder();
     drawClockHands();
     
-    gFlip(G_VSYNC);
+    g2dFlip(G2D_VSYNC);
   }
     
   sceKernelExitGame();
