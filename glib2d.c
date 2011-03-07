@@ -1048,8 +1048,6 @@ void _gTexLoadPNG(FILE* fp, gImage* tex)
   png_set_packing(png_ptr);
   if (color_type == PNG_COLOR_TYPE_PALETTE)
     png_set_palette_to_rgb(png_ptr);
-  if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
-    png_set_gray_1_2_4_to_8(png_ptr);
   if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(png_ptr);
   png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
@@ -1061,7 +1059,7 @@ void _gTexLoadPNG(FILE* fp, gImage* tex)
   tex->data = memalign(16, tex->tw * tex->th * sizeof(gColor));
   line = malloc(width * 4);
   for (y = 0; y < height; y++) {
-    png_read_row(png_ptr, (u8*) line, png_bytep_NULL);
+    png_read_row(png_ptr, (u8*) line, NULL);
     for (x = 0; x < width; x++) {
       u32 color = line[x];
       tex->data[x + y * tex->tw] =  color;
@@ -1069,7 +1067,7 @@ void _gTexLoadPNG(FILE* fp, gImage* tex)
   }
   free(line);
   png_read_end(png_ptr, info_ptr);
-  png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
+  png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 }
 #endif
 
