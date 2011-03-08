@@ -478,7 +478,7 @@ void g2dSetCoordXYZRelative(float x, float y, float z);
  * \brief Resets the global scale.
  *
  * This function resets the global scale to 1.f.
- * Translations and scaling are multiplied by this factor.
+ * Translations and scales are multiplied by this factor.
  */
 
 void g2dResetGlobalScale();
@@ -516,7 +516,7 @@ void g2dGetScaleWH(float* w, float* h);
 /**
  * \brief Sets the global scale.
  *
- * Translations and scaling are multiplied by this factor.
+ * Translations and scales are multiplied by this factor.
  */
 
 void g2dSetGlobalScale(float scale);

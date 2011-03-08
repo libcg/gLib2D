@@ -826,8 +826,8 @@ void g2dSetScaleWH(int w, int h)
 
 void g2dSetScaleRelative(float w, float h)
 {
-  obj_scale_w *= w * global_scale;
-  obj_scale_h *= h * global_scale;
+  obj_scale_w *= w;
+  obj_scale_h *= h;
 
   if (obj_scale_w < 0 || obj_scale_h < 0) obj_use_rot = true;
 }
