@@ -73,7 +73,7 @@ int main()
     
     // Then the rotating lines.
     
-    g2dBeginLines(G2D_FALSE);
+    g2dBeginLines(G2D_VOID);
     g2dSetColor(GRAY);
     
     g2dSetCoordXY(1*G2D_SCR_W/4,1*G2D_SCR_H/4);

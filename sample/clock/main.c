@@ -101,6 +101,7 @@ int main()
     
     g2dClear(WHITE);
     
+    g2dSetGlobalScale(1.5f);
     drawBorder();
     drawClockHands();
     

@@ -49,6 +49,11 @@
 #ifndef GLIB2D_H
 #define GLIB2D_H
 
+// Boolean
+#define false (0)
+#define true (!false)
+typedef char bool;
+
 /**
  * \def USE_PNG
  * \brief Choose if the PNG support is enabled.
@@ -78,22 +83,12 @@
  * \brief Screen height constant, in pixels.
  */ 
 /**
- * \def G2D_FALSE
- * \brief Boolean constant, false or 0
- */ 
-/**
- * \def G2D_TRUE
- * \brief Boolean constant, true or 1
- */
-/**
  * \def G2D_VOID
  * \brief Generic g2dEnum constant, equals to 0 (do nothing)
  */ 
  
 #define G2D_SCR_W (480)
 #define G2D_SCR_H (272)
-#define G2D_FALSE 0
-#define G2D_TRUE !0
 #define G2D_VOID 0
 
 /**
@@ -212,10 +207,6 @@ enum g2dTex_Mode
 };
 
 /**
- * \var bool
- * \brief Boolean type.
- */
-/**
  * \var g2dAlpha
  * \brief Alpha type.
  */
@@ -228,7 +219,6 @@ enum g2dTex_Mode
  * \brief Enumeration type.
  */
 
-typedef char bool;
 typedef int g2dAlpha;
 typedef unsigned int g2dColor;
 typedef int g2dEnum;
@@ -485,6 +475,15 @@ void g2dSetCoordXYRelative(float x, float y);
 void g2dSetCoordXYZRelative(float x, float y, float z);
 
 /**
+ * \brief Resets the global scale.
+ *
+ * This function resets the global scale to 1.f.
+ * Translations and scaling are multiplied by this factor.
+ */
+
+void g2dResetGlobalScale();
+
+/**
  * \brief Resets the current scale.
  *
  * This function must be called during object rendering.
@@ -492,6 +491,15 @@ void g2dSetCoordXYZRelative(float x, float y, float z);
  */
 
 void g2dResetScale();
+
+/**
+ * \brief Gets the global scale.
+ * @param scale Pointer to save the global scale (factor).
+ *
+ * Pass NULL if not needed.
+ */
+
+void g2dGetGlobalScale(float* scale);
 
 /**
  * \brief Gets the current scale.
@@ -504,6 +512,14 @@ void g2dResetScale();
  */
 
 void g2dGetScaleWH(float* w, float* h);
+
+/**
+ * \brief Sets the global scale.
+ *
+ * Translations and scaling are multiplied by this factor.
+ */
+
+void g2dSetGlobalScale(float scale);
 
 /**
  * \brief Sets the new scale.
