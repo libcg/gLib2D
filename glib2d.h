@@ -543,7 +543,7 @@ void g2dSetScale(float w, float h);
  * Note: negative values can be passed to invert the image.
  */
 
-void g2dSetScaleWH(int w, int h);
+void g2dSetScaleWH(float w, float h);
 
 /**
  * \brief Sets the new scale, relative to the current.
@@ -566,7 +566,7 @@ void g2dSetScaleRelative(float w, float h);
  * Note: negative values can be passed to invert the image.
  */
 
-void g2dSetScaleWHRelative(int w, int h);
+void g2dSetScaleWHRelative(float w, float h);
 
 /**
  * \brief Resets the current color.

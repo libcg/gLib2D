@@ -60,7 +60,7 @@ typedef struct
   float rot_sin, rot_cos;
   int crop_x, crop_y;
   int crop_w, crop_h;
-  int scale_w, scale_h;
+  float scale_w, scale_h;
   g2dColor color;
 } Obj_Properties;
 
@@ -815,7 +815,7 @@ void g2dSetScale(float w, float h)
 }
 
 
-void g2dSetScaleWH(int w, int h)
+void g2dSetScaleWH(float w, float h)
 {
   obj_scale_w = w * global_scale;
   obj_scale_h = h * global_scale;
@@ -833,7 +833,7 @@ void g2dSetScaleRelative(float w, float h)
 }
 
 
-void g2dSetScaleWHRelative(int w, int h)
+void g2dSetScaleWHRelative(float w, float h)
 {
   obj_scale_w += w * global_scale;
   obj_scale_h += h * global_scale;
