@@ -1059,8 +1059,38 @@ void _swizzle(unsigned char *dest, unsigned char *source, int width, int height)
 }
 
 
+g2dImage* _g2dTexCreate(int w, int h, bool can_blend)
+{
+  g2dImage* tex = malloc(sizeof(g2dImage));
+  if (tex == NULL) return NULL;
+    
+  tex->tw = _getNextPower2(w);
+  tex->th = _getNextPower2(h);
+  tex->w = w;
+  tex->h = h;
+  tex->ratio = (float)w / h;
+  tex->swizzled = false;
+  tex->can_blend = can_blend;
+  
+  tex->data = memalign(16,tex->tw*tex->th*sizeof(g2dColor));
+  if (tex->data == NULL) { free(tex); return NULL; }
+  memset(tex->data,0,tex->tw*tex->th*sizeof(g2dColor));
+  
+  return tex;
+} 
+
+
+void g2dTexFree(g2dImage** tex)
+{
+  if (tex == NULL) return;
+  free((*tex)->data);
+  free((*tex));
+  *tex = NULL;
+}
+
+
 #ifdef USE_PNG
-void _g2dTexLoadPNG(FILE* fp, g2dImage* tex)
+g2dImage* _g2dTexLoadPNG(FILE* fp)
 {
   png_structp png_ptr;
   png_infop info_ptr;
@@ -1083,12 +1113,7 @@ void _g2dTexLoadPNG(FILE* fp, g2dImage* tex)
   if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(png_ptr);
   png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
-  tex->w = width;
-  tex->h = height;
-  tex->tw = _getNextPower2(width);
-  tex->th = _getNextPower2(height);
-  tex->ratio = (float)width / height;
-  tex->data = memalign(16, tex->tw * tex->th * sizeof(g2dColor));
+  g2dImage* tex = _g2dTexCreate(width,height,true);
   line = malloc(width * 4);
   for (y = 0; y < height; y++) {
     png_read_row(png_ptr, (u8*) line, NULL);
@@ -1100,12 +1125,14 @@ void _g2dTexLoadPNG(FILE* fp, g2dImage* tex)
   free(line);
   png_read_end(png_ptr, info_ptr);
   png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+  
+  return tex;
 }
 #endif
 
 
 #ifdef USE_JPEG
-void _g2dTexLoadJPEG(FILE* fp, g2dImage* tex)
+g2dImage* _g2dTexLoadJPEG(FILE* fp)
 {
   struct jpeg_decompress_struct dinfo;
   struct jpeg_error_mgr jerr;
@@ -1116,12 +1143,7 @@ void _g2dTexLoadJPEG(FILE* fp, g2dImage* tex)
   int width = dinfo.image_width;
   int height = dinfo.image_height;
   jpeg_start_decompress(&dinfo);
-  tex->w = width;
-  tex->h = height;
-  tex->tw = _getNextPower2(width);
-  tex->th = _getNextPower2(height);
-  tex->ratio = (float)width / height;
-  tex->data = (g2dColor*) memalign(16, tex->tw * tex->th * sizeof(g2dColor));
+  g2dImage* tex = _g2dTexCreate(width,height,false);
   u8* line = (u8*) malloc(width * 3);
   if (dinfo.jpeg_color_space == JCS_GRAYSCALE) {
     while (dinfo.output_scanline < dinfo.output_height) {
@@ -1148,17 +1170,10 @@ void _g2dTexLoadJPEG(FILE* fp, g2dImage* tex)
   jpeg_finish_decompress(&dinfo);
   jpeg_destroy_decompress(&dinfo);
   free(line);
+  
+  return tex;
 }
 #endif
-
-
-void g2dTexFree(g2dImage** tex)
-{
-  if (tex == NULL) return;
-  free((*tex)->data);
-  free((*tex));
-  *tex = NULL;
-}
 
 
 g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
@@ -1167,24 +1182,22 @@ g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
 
   g2dImage* tex = NULL;
   FILE* fp = NULL;
-  if ((tex = malloc(sizeof(g2dImage))) == NULL) goto error;
   if ((fp = fopen(path,"rb")) == NULL) goto error;
 
   #ifdef USE_PNG
   if (strstr(path,".png") != NULL)
   {
-    _g2dTexLoadPNG(fp,tex);
-    tex->can_blend = true;
+    tex = _g2dTexLoadPNG(fp);
   }
   #endif
   #ifdef USE_JPEG
   if (strstr(path,".jpg")  != NULL ||
       strstr(path,".jpeg") != NULL )
   {
-    _g2dTexLoadJPEG(fp,tex);
-    tex->can_blend = false;
+    tex = _g2dTexLoadJPEG(fp);
   }
   #endif
+  if (tex == NULL) goto error;
 
   fclose(fp);
   fp = NULL;
