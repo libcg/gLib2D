@@ -237,7 +237,7 @@ typedef struct
   float ratio;    /**< Width/Height ratio. */
   bool swizzled;  /**< Is the texture swizzled ? */
   bool can_blend; /**< Can the texture blend ? */
-  g2dColor* data;   /**< Pointer to the texture raw data. */
+  g2dColor* data; /**< Pointer to the texture raw data. */
 } g2dImage;
 
 /**

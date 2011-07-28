@@ -1165,10 +1165,10 @@ g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
 {
   if (path == NULL) return NULL;
 
-  g2dImage* tex = malloc(sizeof(g2dImage));
-  if (tex == NULL) return NULL;
-  FILE* fp = fopen(path,"rb");
-  if (fp == NULL) return NULL;
+  g2dImage* tex = NULL;
+  FILE* fp = NULL;
+  if ((tex = malloc(sizeof(g2dImage))) == NULL) goto error;
+  if ((fp = fopen(path,"rb")) == NULL) goto error;
 
   #ifdef USE_PNG
   if (strstr(path,".png") != NULL)
@@ -1187,14 +1187,11 @@ g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
   #endif
 
   fclose(fp);
+  fp = NULL;
   sceKernelDcacheWritebackAll();
 
   // The PSP can't draw 512*512+ textures.
-  if (tex->w > 512 || tex->h > 512)
-  {
-    g2dTexFree(&tex);
-    return NULL;
-  }
+  if (tex->w > 512 || tex->h > 512) goto error;
 
   // Swizzling is useless with small textures.
   if ((tex_mode & G2D_SWIZZLE) && (tex->w >= 16 || tex->h >= 16))
@@ -1209,6 +1206,12 @@ g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
   else tex->swizzled = false;
 
   return tex;
+  
+  // Load failure... abort
+  error:
+  if (fp != NULL) fclose(fp);
+  g2dTexFree(&tex);
+  return NULL;
 }
 
 // * Scissor functions *

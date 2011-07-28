@@ -29,8 +29,12 @@ int main()
   
   SceCtrlData pad;
   g2dImage* tex = g2dTexLoad("tex.png",G2D_SWIZZLE);
-  int alpha = 255, x = G2D_SCR_W/2, y = G2D_SCR_H/2,
-      w = tex->w, h = tex->h, rot = 0;
+  int alpha = 255,
+      x = G2D_SCR_W/2,
+      y = G2D_SCR_H/2,
+      w = (tex == NULL ? 10 : tex->w),
+      h = (tex == NULL ? 10 : tex->h),
+      rot = 0;
 
   while (1)
   {
