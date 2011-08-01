@@ -49,7 +49,19 @@
 #ifndef GLIB2D_H
 #define GLIB2D_H
 
-// Boolean
+/**
+ * \def false
+ * \brief False boolean constant. 
+ */ 
+/**
+ * \def true
+ * \brief True boolean constant.
+ */ 
+/**
+ * \typedef bool
+ * \brief Boolean variable type.
+ */ 
+
 #define false (0)
 #define true (!false)
 typedef char bool;
@@ -84,7 +96,7 @@ typedef char bool;
  */ 
 /**
  * \def G2D_VOID
- * \brief Generic g2dEnum constant, equals to 0 (do nothing)
+ * \brief Generic g2dEnum constant, equals to 0 (do nothing).
  */ 
  
 #define G2D_SCR_W (480)
@@ -410,7 +422,7 @@ void g2dResetCoord();
 
 /**
  * \brief Set coordinate mode.
- * @param mode A gCoord_Mode.
+ * @param coord_mode A gCoord_Mode.
  *
  * This function must be called during object rendering.
  * Defines where the coordinates correspond in the object.
@@ -789,8 +801,8 @@ void g2dResetTex();
 
 /**
  * \brief Set texture wrap.
- * @param use G2D_TRUE to repeat.
-              G2D_FALSE to clamp (by default).
+ * @param use true to repeat.
+              false to clamp (by default).
  *
  * This function must be called during object rendering.
  */
@@ -799,19 +811,19 @@ void g2dSetTexRepeat(bool use);
 
 /**
  * \brief Use the alpha blending with the texture.
- * @param use G2D_TRUE to activate (better look, by default).
-              G2D_FALSE to desactivate (better performance).
+ * @param use true to activate (better look, by default).
+              false to desactivate (better performance).
  *
  * This function must be called during object rendering.
- * Automaticaly disabled when g2dImage::can_blend is set to G2D_FALSE.
+ * Automaticaly disabled when g2dImage::can_blend is set to false.
  */
 
 void g2dSetTexBlend(bool use);
 
 /**
  * \brief Use the bilinear filter with the texture.
- * @param use G2D_TRUE to activate (better look, by default).
-              G2D_FALSE to desactivate (better performance).
+ * @param use true to activate (better look, by default).
+              false to desactivate (better performance).
  *
  * This function must be called during object rendering.
  * Only useful when scaling.
