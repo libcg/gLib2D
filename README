@@ -10,7 +10,7 @@ The goals : keep it simple, keep it small, keep it fast.
 - Draw & display buffers can't actually be used as real textures. Just a way
   to get the vram pointer.
 - No support for multiples contexts (e.g. sharing coordinates between
-  textures using some gBegin calls at a time).
+  textures using some g2dBegin calls at a time).
 - Manipulating textures (clear, get pixel info...) is not possible.
 - When some 512*512 rotated, colorized and scaled textures are rendered
   at a time, the framerate *could* go under 60 fps.
@@ -34,7 +34,7 @@ You can support the library by marking your homebrew with
 
 Please report bugs or submit ideas at :
 geecko.dev@free.fr
+
 Stay tuned on...
-https://github.com/GeeckoDev
+https://github.com/GeeckoDev (contributors would be a plus!)
 http://twitter.com/GeeckoDev
-http://geeckodev.tumblr.com
