@@ -32,7 +32,7 @@
 #define TRANSFORM_STACK_MAX (64)
 #define SLICE_WIDTH         (64)
 
-#define DEFAULT_SIDE       (10)
+#define DEFAULT_SIZE       (10)
 #define DEFAULT_COORD_MODE (G2D_UP_LEFT)
 #define DEFAULT_X          (0.f)
 #define DEFAULT_Y          (0.f)
@@ -775,8 +775,8 @@ void g2dResetScale()
 {
   if (!obj_use_tex)
   {
-    obj_scale_w = DEFAULT_SIDE;
-    obj_scale_h = DEFAULT_SIDE;
+    obj_scale_w = DEFAULT_SIZE;
+    obj_scale_h = DEFAULT_SIZE;
   }
   else
   {
