@@ -1034,14 +1034,14 @@ int _getNextPower2(int n)
 
 void _swizzle(unsigned char *dest, unsigned char *source, int width, int height)
 {
-  int i,j;
+  int i, j;
   int rowblocks = (width / 16);
-  int rowblocks_add = (rowblocks-1)*128;
+  int rowblocks_add = (rowblocks-1) * 128;
   unsigned int block_address = 0;
   unsigned int *img = (unsigned int*)source;
-  for (j = 0; j < height; j++)
+  for (j = 0; j < height; j++, block_address += 16)
   {
-    unsigned int *block = (unsigned int*)((unsigned int)&dest[block_address] | 0x40000000);
+    unsigned int *block = (unsigned int*)(dest + block_address);
     for (i = 0; i < rowblocks; i++)
     {
       *block++ = *img++;
@@ -1050,11 +1050,7 @@ void _swizzle(unsigned char *dest, unsigned char *source, int width, int height)
       *block++ = *img++;
       block += 28;
     }
-    if ((j&0x7)==0x7)
-    {
-      block_address += rowblocks_add;
-    }
-    block_address+=16;
+    if ((j & 0x7) == 0x7) block_address += rowblocks_add;
   }
 }
 
