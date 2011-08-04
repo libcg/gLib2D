@@ -107,7 +107,7 @@ g2dImage g2d_draw_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
 void _g2dInit()
 {
   // Display list allocation
-  list = memalign(16,262144*sizeof(int));
+  list = malloc(262144*sizeof(int));
 
   // Init & setup GU
   sceGuInit();
@@ -1068,7 +1068,7 @@ g2dImage* _g2dTexCreate(int w, int h, bool can_blend)
   tex->swizzled = false;
   tex->can_blend = can_blend;
   
-  tex->data = memalign(16,tex->tw*tex->th*sizeof(g2dColor));
+  tex->data = malloc(tex->tw*tex->th*sizeof(g2dColor));
   if (tex->data == NULL) { free(tex); return NULL; }
   memset(tex->data,0,tex->tw*tex->th*sizeof(g2dColor));
   
