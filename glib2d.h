@@ -417,7 +417,6 @@ void g2dResetCoord();
  *
  * This function must be called during object rendering.
  * Defines where the coordinates correspond in the object.
- * Works even if the texture is inverted.
  */
 void g2dSetCoordMode(g2dEnum coord_mode);
 

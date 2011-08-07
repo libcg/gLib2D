@@ -592,25 +592,7 @@ void g2dAdd()
                     CURRENT_OBJ.scale_h :
                    (obj_coord_mode == G2D_CENTER ?
                     CURRENT_OBJ.scale_h/2 : 0));
-  // Image inverted
-  if (CURRENT_OBJ.scale_w < 0)
-  {
-    CURRENT_OBJ.x += (obj_coord_mode == G2D_UP_LEFT ||
-                      obj_coord_mode == G2D_DOWN_LEFT ?
-                      -CURRENT_OBJ.scale_w :
-                     (obj_coord_mode == G2D_UP_RIGHT ||
-                      obj_coord_mode == G2D_DOWN_RIGHT ?
-                       CURRENT_OBJ.scale_w : 0));
-  }
-  if (CURRENT_OBJ.scale_h < 0)
-  {
-    CURRENT_OBJ.y += (obj_coord_mode == G2D_UP_LEFT ||
-                      obj_coord_mode == G2D_UP_RIGHT ?
-                      -CURRENT_OBJ.scale_h :
-                     (obj_coord_mode == G2D_DOWN_LEFT ||
-                      obj_coord_mode == G2D_DOWN_RIGHT ?
-                       CURRENT_OBJ.scale_h : 0));
-  }
+
   // Alpha stuff
   CURRENT_OBJ.color = G2D_MODULATE(CURRENT_OBJ.color,255,obj_alpha);
 }
