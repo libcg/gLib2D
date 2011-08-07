@@ -77,7 +77,7 @@ static g2dEnum obj_type;
 static int obj_list_size;
 static bool obj_begin = false, obj_line_strip;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
-            obj_use_tex, obj_use_tex_linear, obj_use_tex_repeat;
+            obj_use_tex_linear, obj_use_tex_repeat;
 // * Coord vars *
 static g2dEnum obj_coord_mode;
 static float obj_x, obj_y, obj_z;
@@ -158,60 +158,6 @@ void _g2dStart()
 }
 
 
-void _g2dCoordInit()
-{
-  g2dResetCoord();
-  obj_use_z = false;
-}
-
-
-void _g2dScaleInit()
-{
-  g2dResetScale();
-}
-
-
-void _g2dColorInit()
-{
-  g2dResetColor();
-  obj_colors_count = 0;
-  obj_use_vert_color = false;
-}
-
-
-void _g2dAlphaInit()
-{
-  g2dResetAlpha();
-  obj_use_blend = false;
-}
-
-
-void _g2dRotationInit()
-{
-  g2dResetRotation();
-  obj_use_rot = false;
-}
-
-
-void _g2dCropInit()
-{
-  if (!obj_use_tex) return;
-  g2dResetCrop();
-}
-
-
-void _g2dTexInit()
-{
-  if (obj_tex == NULL)
-  {
-    obj_use_tex = false;
-    return;
-  }
-  obj_use_tex = true;
-  g2dResetTex();
-}
-
-
 // Vertex order: [texture uv] [color] [vertex]
 void* _g2dSetVertex(void* vp, int i, float vx, float vy)
 {
@@ -220,7 +166,7 @@ void* _g2dSetVertex(void* vp, int i, float vx, float vy)
   float* v_p_float;
 
   // Texture
-  if (obj_use_tex)
+  if (obj_tex != NULL)
   {
     *(v_p_short++) = I_OBJ.crop_x + vx * I_OBJ.crop_w;
     *(v_p_short++) = I_OBJ.crop_y + vy * I_OBJ.crop_h;
@@ -288,6 +234,8 @@ void g2dClear(g2dColor color)
 
 void g2dClearZ()
 {
+  if (!start) _g2dStart();
+
   sceGuClear(GU_DEPTH_BUFFER_BIT | GU_FAST_CLEAR_BIT);
   zclear = true;
 }
@@ -300,13 +248,12 @@ void _g2dBeginCommon()
   obj_list_size = 0;
   obj_list = realloc(obj_list,MALLOC_STEP * sizeof(Obj_Properties));
 
-  _g2dCoordInit();
-  _g2dColorInit();
-  _g2dAlphaInit();
-  _g2dRotationInit();
-  _g2dTexInit();
-  _g2dCropInit();
-  _g2dScaleInit();
+  g2dReset();
+  obj_use_z = false;
+  obj_use_vert_color = false;
+  obj_use_blend = false;
+  obj_use_rot = false;
+  obj_colors_count = 0;
 
   obj_begin = true;
 }
@@ -363,7 +310,7 @@ void _g2dEndRects()
       v_obj_nbr = (obj_use_rot ? 6 : 2),
       v_nbr,
       v_coord_size = 3,
-      v_tex_size = (obj_use_tex ? 2 : 0),
+      v_tex_size = (obj_tex != NULL ? 2 : 0),
       v_color_size = (obj_use_vert_color ? 1 : 0),
       v_size = v_tex_size * sizeof(short) +
                v_color_size * sizeof(g2dColor) +
@@ -371,11 +318,11 @@ void _g2dEndRects()
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
       n_slices = -1, i;
 
-  if (obj_use_tex)        v_type |= GU_TEXTURE_16BIT;
+  if (obj_tex != NULL)        v_type |= GU_TEXTURE_16BIT;
   if (obj_use_vert_color) v_type |= GU_COLOR_8888;
 
   // Count how many vertices to allocate.
-  if (!obj_use_tex || obj_use_rot) // No slicing
+  if (obj_tex == NULL || obj_use_rot) // No slicing
   {
     v_nbr = v_obj_nbr * obj_list_size;
   }
@@ -396,7 +343,7 @@ void _g2dEndRects()
   {
     if (!obj_use_rot)
     {
-      if (!obj_use_tex)
+      if (obj_tex == NULL)
       {
         vi = _g2dSetVertex(vi,i,0.f,0.f);
         vi = _g2dSetVertex(vi,i,1.f,1.f);
@@ -476,7 +423,7 @@ void _g2dEndQuads()
       v_obj_nbr = 6,
       v_nbr = v_obj_nbr * (obj_list_size / 4),
       v_coord_size = 3,
-      v_tex_size = (obj_use_tex ? 2 : 0),
+      v_tex_size = (obj_tex != NULL ? 2 : 0),
       v_color_size = (obj_use_vert_color ? 1 : 0),
       v_size = v_tex_size * sizeof(short) +
                v_color_size * sizeof(g2dColor) +
@@ -484,7 +431,7 @@ void _g2dEndQuads()
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
       i;
 
-  if (obj_use_tex)        v_type |= GU_TEXTURE_16BIT;
+  if (obj_tex != NULL)        v_type |= GU_TEXTURE_16BIT;
   if (obj_use_vert_color) v_type |= GU_COLOR_8888;
 
   // Allocate vertex list memory
@@ -550,7 +497,7 @@ void g2dEnd()
   else                    sceGuDisable(GU_BLEND);
   if (obj_use_vert_color) sceGuColor(WHITE);
   else                    sceGuColor(obj_list[0].color);
-  if (!obj_use_tex)       sceGuDisable(GU_TEXTURE_2D);
+  if (obj_tex != NULL)       sceGuDisable(GU_TEXTURE_2D);
   else
   {
     sceGuEnable(GU_TEXTURE_2D);
@@ -587,7 +534,7 @@ void g2dReset()
   g2dResetAlpha();
   g2dResetRotation();
   g2dResetCrop();
-  g2dResetScissor();
+  g2dResetTex();
 }
 
 
@@ -773,7 +720,7 @@ void g2dResetGlobalScale()
 
 void g2dResetScale()
 {
-  if (!obj_use_tex)
+  if (obj_tex == NULL)
   {
     obj_scale_w = DEFAULT_SIZE;
     obj_scale_h = DEFAULT_SIZE;
@@ -937,7 +884,7 @@ void g2dSetRotationRelative(float degrees)
 
 void g2dResetCrop()
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   obj_crop_x = 0;
   obj_crop_y = 0;
   obj_crop_w = obj_tex->w;
@@ -947,7 +894,7 @@ void g2dResetCrop()
 
 void g2dGetCropXY(int* x, int* y)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   if (x != NULL) *x = obj_crop_x;
   if (y != NULL) *y = obj_crop_y;
 }
@@ -955,7 +902,7 @@ void g2dGetCropXY(int* x, int* y)
 
 void g2dGetCropWH(int* w, int* h)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   if (w != NULL) *w = obj_crop_w;
   if (h != NULL) *h = obj_crop_h;
 }
@@ -963,7 +910,7 @@ void g2dGetCropWH(int* w, int* h)
 
 void g2dSetCropXY(int x, int y)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   obj_crop_x = x;
   obj_crop_y = y;
 }
@@ -971,7 +918,7 @@ void g2dSetCropXY(int x, int y)
 
 void g2dSetCropWH(int w, int h)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   obj_crop_w = w;
   obj_crop_h = h;
 }
@@ -979,14 +926,14 @@ void g2dSetCropWH(int w, int h)
 
 void g2dSetCropXYRelative(int x, int y)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   g2dSetCropXY(obj_crop_x + x, obj_crop_y + y);
 }
 
 
 void g2dSetCropWHRelative(int w, int h)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   g2dSetCropWH(obj_crop_w + w, obj_crop_h + h);
 }
 
@@ -994,7 +941,7 @@ void g2dSetCropWHRelative(int w, int h)
 
 void g2dResetTex()
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   obj_use_tex_repeat = false;
   obj_use_tex_linear = true;
   if (obj_tex->can_blend) obj_use_blend = true;
@@ -1003,14 +950,14 @@ void g2dResetTex()
 
 void g2dSetTexRepeat(bool use)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   obj_use_tex_repeat = use;
 }
 
 
 void g2dSetTexBlend(bool use)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   if (!obj_tex->can_blend) return;
   obj_use_blend = use;
 }
@@ -1018,7 +965,7 @@ void g2dSetTexBlend(bool use)
 
 void g2dSetTexLinear(bool use)
 {
-  if (!obj_use_tex) return;
+  if (obj_tex == NULL) return;
   obj_use_tex_linear = use;
 }
 
