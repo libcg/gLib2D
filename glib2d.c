@@ -107,7 +107,7 @@ g2dImage g2d_draw_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
 void _g2dInit()
 {
   // Display list allocation
-  list = malloc(262144*sizeof(int));
+  list = malloc(256*1024);
 
   // Init & setup GU
   sceGuInit();
