@@ -318,7 +318,7 @@ void _g2dEndRects()
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
       n_slices = -1, i;
 
-  if (obj_tex != NULL)        v_type |= GU_TEXTURE_16BIT;
+  if (obj_tex != NULL)    v_type |= GU_TEXTURE_16BIT;
   if (obj_use_vert_color) v_type |= GU_COLOR_8888;
 
   // Count how many vertices to allocate.
@@ -431,7 +431,7 @@ void _g2dEndQuads()
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
       i;
 
-  if (obj_tex != NULL)        v_type |= GU_TEXTURE_16BIT;
+  if (obj_tex != NULL)    v_type |= GU_TEXTURE_16BIT;
   if (obj_use_vert_color) v_type |= GU_COLOR_8888;
 
   // Allocate vertex list memory
@@ -497,7 +497,7 @@ void g2dEnd()
   else                    sceGuDisable(GU_BLEND);
   if (obj_use_vert_color) sceGuColor(WHITE);
   else                    sceGuColor(obj_list[0].color);
-  if (obj_tex != NULL)       sceGuDisable(GU_TEXTURE_2D);
+  if (obj_tex == NULL)    sceGuDisable(GU_TEXTURE_2D);
   else
   {
     sceGuEnable(GU_TEXTURE_2D);
