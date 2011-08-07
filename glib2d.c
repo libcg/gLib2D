@@ -248,12 +248,12 @@ void _g2dBeginCommon()
   obj_list_size = 0;
   obj_list = realloc(obj_list,MALLOC_STEP * sizeof(Obj_Properties));
 
-  g2dReset();
   obj_use_z = false;
   obj_use_vert_color = false;
   obj_use_blend = false;
   obj_use_rot = false;
   obj_colors_count = 0;
+  g2dReset();
 
   obj_begin = true;
 }
