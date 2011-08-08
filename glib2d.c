@@ -57,12 +57,13 @@ typedef struct
 {
   float x, y, z;
   float rot_x, rot_y; // Rotation center
-  float rot_sin, rot_cos;
+  float rot, rot_sin, rot_cos;
   int crop_x, crop_y;
   int crop_w, crop_h;
   float scale_w, scale_h;
   g2dColor color;
-} Obj_Properties;
+  g2dAlpha alpha;
+} Object;
 
 
 // * Main vars *
@@ -72,27 +73,14 @@ static Transform transform_stack[TRANSFORM_STACK_MAX];
 static int transform_stack_size;
 static float global_scale = 1.f;
 // * Object vars *
-static Obj_Properties* obj_list = NULL;
+static Object *obj_list = NULL, obj;
 static g2dEnum obj_type;
 static int obj_list_size;
 static bool obj_begin = false, obj_line_strip;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
             obj_use_tex_linear, obj_use_tex_repeat;
-// * Coord vars *
 static g2dEnum obj_coord_mode;
-static float obj_x, obj_y, obj_z;
-// * Crop vars *
-static int obj_crop_x, obj_crop_y;
-static int obj_crop_w, obj_crop_h;
-// * Scale vars *
-static float obj_scale_w, obj_scale_h;
-// * Color & alpha vars *
-static g2dColor obj_color;
-static g2dAlpha obj_alpha;
-static bool obj_colors_count;
-// * Rotation vars *
-static float obj_rot, obj_rot_sin, obj_rot_cos;
-// * Texture vars *
+static int obj_colors_count;
 static g2dImage* obj_tex;
 
 g2dImage g2d_draw_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
@@ -205,17 +193,17 @@ void* _g2dSetVertex(void* vp, int i, float vx, float vy)
 void _g2dVertexSort()
 {
   int i, j;
-  Obj_Properties obj_tmp;
+  Object obj_tmp;
   for (i=1; i<obj_list_size; i++)
   {
     j = i;
-    memcpy(&obj_tmp,obj_list+j,sizeof(Obj_Properties));
+    memcpy(&obj_tmp,obj_list+j,sizeof(Object));
     while (j>0 && obj_list[j-1].z < obj_tmp.z)
     {
-      memcpy(obj_list+j,obj_list+j-1,sizeof(Obj_Properties));
+      memcpy(obj_list+j,obj_list+j-1,sizeof(Object));
       j--;
     }
-    memcpy(obj_list+j,&obj_tmp,sizeof(Obj_Properties));
+    memcpy(obj_list+j,&obj_tmp,sizeof(Object));
   }
 }
 
@@ -246,7 +234,7 @@ void _g2dBeginCommon()
   if (!start) _g2dStart();
 
   obj_list_size = 0;
-  obj_list = realloc(obj_list,MALLOC_STEP * sizeof(Obj_Properties));
+  obj_list = realloc(obj_list,MALLOC_STEP * sizeof(Object));
 
   obj_use_z = false;
   obj_use_vert_color = false;
@@ -556,30 +544,17 @@ void g2dFlip(g2dEnum flip_mode)
 void g2dAdd()
 {
   if (!obj_begin) return;
-  if (obj_scale_w == 0 || obj_scale_h == 0) return;
+  if (obj.scale_w == 0 || obj.scale_h == 0) return;
 
   if (!(obj_list_size % MALLOC_STEP))
   {
-    obj_list = realloc(obj_list,(obj_list_size+MALLOC_STEP) *
-                                sizeof(Obj_Properties));
+    obj_list = realloc(obj_list,(obj_list_size+MALLOC_STEP) * sizeof(Object));
   }
 
   obj_list_size++;
-
-  CURRENT_OBJ.x = obj_x;
-  CURRENT_OBJ.y = obj_y;
-  CURRENT_OBJ.z = obj_z;
-  CURRENT_OBJ.crop_x = obj_crop_x;
-  CURRENT_OBJ.crop_y = obj_crop_y;
-  CURRENT_OBJ.crop_w = obj_crop_w;
-  CURRENT_OBJ.crop_h = obj_crop_h;
-  CURRENT_OBJ.scale_w = obj_scale_w;
-  CURRENT_OBJ.scale_h = obj_scale_h;
-  CURRENT_OBJ.color = obj_color;
-  CURRENT_OBJ.rot_x = obj_x;
-  CURRENT_OBJ.rot_y = obj_y;
-  CURRENT_OBJ.rot_sin = obj_rot_sin;
-  CURRENT_OBJ.rot_cos = obj_rot_cos;
+  obj.rot_x = obj.x;
+  obj.rot_y = obj.y;
+  CURRENT_OBJ = obj;
 
   // Coord mode stuff
   CURRENT_OBJ.x -= (obj_coord_mode == G2D_UP_RIGHT ||
@@ -594,7 +569,7 @@ void g2dAdd()
                     CURRENT_OBJ.scale_h/2 : 0));
 
   // Alpha stuff
-  CURRENT_OBJ.color = G2D_MODULATE(CURRENT_OBJ.color,255,obj_alpha);
+  CURRENT_OBJ.color = G2D_MODULATE(CURRENT_OBJ.color,255,obj.alpha);
 }
 
 
@@ -602,30 +577,30 @@ void g2dPush()
 {
   if (transform_stack_size >= TRANSFORM_STACK_MAX) return;
   transform_stack_size++;
-  CURRENT_TRANSFORM.x = obj_x;
-  CURRENT_TRANSFORM.y = obj_y;
-  CURRENT_TRANSFORM.z = obj_z;
-  CURRENT_TRANSFORM.rot = obj_rot;
-  CURRENT_TRANSFORM.rot_sin = obj_rot_sin;
-  CURRENT_TRANSFORM.rot_cos = obj_rot_cos;
-  CURRENT_TRANSFORM.scale_w = obj_scale_w;
-  CURRENT_TRANSFORM.scale_h = obj_scale_h;
+  CURRENT_TRANSFORM.x = obj.x;
+  CURRENT_TRANSFORM.y = obj.y;
+  CURRENT_TRANSFORM.z = obj.z;
+  CURRENT_TRANSFORM.rot = obj.rot;
+  CURRENT_TRANSFORM.rot_sin = obj.rot_sin;
+  CURRENT_TRANSFORM.rot_cos = obj.rot_cos;
+  CURRENT_TRANSFORM.scale_w = obj.scale_w;
+  CURRENT_TRANSFORM.scale_h = obj.scale_h;
 }
 
 
 void g2dPop()
 {
   if (transform_stack_size <= 0) return;
-  obj_x = CURRENT_TRANSFORM.x;
-  obj_y = CURRENT_TRANSFORM.y;
-  obj_z = CURRENT_TRANSFORM.z;
-  obj_rot = CURRENT_TRANSFORM.rot;
-  obj_rot_sin = CURRENT_TRANSFORM.rot_sin;
-  obj_rot_cos = CURRENT_TRANSFORM.rot_cos;
-  obj_scale_w = CURRENT_TRANSFORM.scale_w;
-  obj_scale_h = CURRENT_TRANSFORM.scale_h;
-  if (obj_rot != 0.f) obj_use_rot = true;
-  if (obj_z != 0.f) obj_use_z = true;
+  obj.x = CURRENT_TRANSFORM.x;
+  obj.y = CURRENT_TRANSFORM.y;
+  obj.z = CURRENT_TRANSFORM.z;
+  obj.rot = CURRENT_TRANSFORM.rot;
+  obj.rot_sin = CURRENT_TRANSFORM.rot_sin;
+  obj.rot_cos = CURRENT_TRANSFORM.rot_cos;
+  obj.scale_w = CURRENT_TRANSFORM.scale_w;
+  obj.scale_h = CURRENT_TRANSFORM.scale_h;
+  if (obj.rot != 0.f) obj_use_rot = true;
+  if (obj.z != 0.f) obj_use_z = true;
   transform_stack_size--;
 }
 
@@ -634,9 +609,9 @@ void g2dPop()
 void g2dResetCoord()
 {
   obj_coord_mode = DEFAULT_COORD_MODE;
-  obj_x = DEFAULT_X;
-  obj_y = DEFAULT_Y;
-  obj_z = DEFAULT_Z;
+  obj.x = DEFAULT_X;
+  obj.y = DEFAULT_Y;
+  obj.z = DEFAULT_Z;
 }
 
 
@@ -649,25 +624,25 @@ void g2dSetCoordMode(g2dEnum coord_mode)
 
 void g2dGetCoordXYZ(float* x, float* y, float* z)
 {
-  if (x != NULL) *x = obj_x;
-  if (y != NULL) *y = obj_y;
-  if (z != NULL) *z = obj_z;
+  if (x != NULL) *x = obj.x;
+  if (y != NULL) *y = obj.y;
+  if (z != NULL) *z = obj.z;
 }
 
 
 void g2dSetCoordXY(float x, float y)
 {
-  obj_x = x * global_scale;
-  obj_y = y * global_scale;
-  obj_z = 0.f;
+  obj.x = x * global_scale;
+  obj.y = y * global_scale;
+  obj.z = 0.f;
 }
 
 
 void g2dSetCoordXYZ(float x, float y, float z)
 {
-  obj_x = x * global_scale;
-  obj_y = y * global_scale;
-  obj_z = z * global_scale;
+  obj.x = x * global_scale;
+  obj.y = y * global_scale;
+  obj.z = z * global_scale;
   if (z != 0.f) obj_use_z = true;
 }
 
@@ -675,20 +650,20 @@ void g2dSetCoordXYZ(float x, float y, float z)
 void g2dSetCoordXYRelative(float x, float y)
 {
   float inc_x = x, inc_y = y;
-  if (obj_rot_cos != 1.f)
+  if (obj.rot_cos != 1.f)
   {
-    inc_x = -obj_rot_sin*y + obj_rot_cos*x;
-    inc_y =  obj_rot_cos*y + obj_rot_sin*x;
+    inc_x = -obj.rot_sin*y + obj.rot_cos*x;
+    inc_y =  obj.rot_cos*y + obj.rot_sin*x;
   }
-  obj_x += inc_x * global_scale;
-  obj_y += inc_y * global_scale;  
+  obj.x += inc_x * global_scale;
+  obj.y += inc_y * global_scale;  
 }
 
 
 void g2dSetCoordXYZRelative(float x, float y, float z)
 {
   g2dSetCoordXYRelative(x,y);
-  obj_z += z * global_scale;
+  obj.z += z * global_scale;
   if (z != 0.f) obj_use_z = true;
 }
 
@@ -704,17 +679,17 @@ void g2dResetScale()
 {
   if (obj_tex == NULL)
   {
-    obj_scale_w = DEFAULT_SIZE;
-    obj_scale_h = DEFAULT_SIZE;
+    obj.scale_w = DEFAULT_SIZE;
+    obj.scale_h = DEFAULT_SIZE;
   }
   else
   {
-    obj_scale_w = obj_tex->w;
-    obj_scale_h = obj_tex->h;
+    obj.scale_w = obj_tex->w;
+    obj.scale_h = obj_tex->h;
   }
   
-  obj_scale_w *= global_scale;
-  obj_scale_h *= global_scale;
+  obj.scale_w *= global_scale;
+  obj.scale_h *= global_scale;
 }
 
 
@@ -726,8 +701,8 @@ void g2dGetGlobalScale(float* scale)
 
 void g2dGetScaleWH(float* w, float* h)
 {
-  if (w != NULL) *w = obj_scale_w;
-  if (h != NULL) *h = obj_scale_h;
+  if (w != NULL) *w = obj.scale_w;
+  if (h != NULL) *h = obj.scale_h;
 }
 
 
@@ -746,55 +721,55 @@ void g2dSetScale(float w, float h)
 
 void g2dSetScaleWH(float w, float h)
 {
-  obj_scale_w = w * global_scale;
-  obj_scale_h = h * global_scale;
+  obj.scale_w = w * global_scale;
+  obj.scale_h = h * global_scale;
   // A trick to prevent an unexpected behavior when mirroring with GU_SPRITES.
-  if (obj_scale_w < 0 || obj_scale_h < 0) obj_use_rot = true;
+  if (obj.scale_w < 0 || obj.scale_h < 0) obj_use_rot = true;
 }
 
 
 void g2dSetScaleRelative(float w, float h)
 {
-  obj_scale_w *= w;
-  obj_scale_h *= h;
+  obj.scale_w *= w;
+  obj.scale_h *= h;
 
-  if (obj_scale_w < 0 || obj_scale_h < 0) obj_use_rot = true;
+  if (obj.scale_w < 0 || obj.scale_h < 0) obj_use_rot = true;
 }
 
 
 void g2dSetScaleWHRelative(float w, float h)
 {
-  obj_scale_w += w * global_scale;
-  obj_scale_h += h * global_scale;
+  obj.scale_w += w * global_scale;
+  obj.scale_h += h * global_scale;
 
-  if (obj_scale_w < 0 || obj_scale_h < 0) obj_use_rot = true;
+  if (obj.scale_w < 0 || obj.scale_h < 0) obj_use_rot = true;
 }
 
 // * Color functions *
 
 void g2dResetColor()
 {
-  obj_color = DEFAULT_COLOR;
+  obj.color = DEFAULT_COLOR;
 }
 
 
 void g2dResetAlpha()
 {
-  obj_alpha = DEFAULT_ALPHA;
+  obj.alpha = DEFAULT_ALPHA;
 }
 
 
 void g2dGetAlpha(g2dAlpha* alpha)
 {
-  if (alpha != NULL) *alpha = obj_alpha;
+  if (alpha != NULL) *alpha = obj.alpha;
 }
 
 
 void g2dSetColor(g2dColor color)
 {
-  obj_color = color;
+  obj.color = color;
   if (++obj_colors_count > 1) obj_use_vert_color = true;
-  if (G2D_GET_A(obj_color) < 255) obj_use_blend = true;
+  if (G2D_GET_A(obj.color) < 255) obj_use_blend = true;
 }
 
 
@@ -802,45 +777,45 @@ void g2dSetAlpha(g2dAlpha alpha)
 {
   if (alpha < 0) alpha = 0;
   if (alpha > 255) alpha = 255;
-  obj_alpha = alpha;
+  obj.alpha = alpha;
   if (++obj_colors_count > 1) obj_use_vert_color = true;
-  if (obj_alpha < 255) obj_use_blend = true;
+  if (obj.alpha < 255) obj_use_blend = true;
 }
 
 
 void g2dSetAlphaRelative(int alpha)
 {
-  g2dSetAlpha(obj_alpha + alpha);
+  g2dSetAlpha(obj.alpha + alpha);
 }
 
 // * Rotations functions *
 
 void g2dResetRotation()
 {
-  obj_rot = 0.f;
-  obj_rot_sin = 0.f;
-  obj_rot_cos = 1.f;
+  obj.rot = 0.f;
+  obj.rot_sin = 0.f;
+  obj.rot_cos = 1.f;
 }
 
 
 void g2dGetRotationRad(float* radians)
 {
-  if (radians != NULL) *radians = obj_rot;
+  if (radians != NULL) *radians = obj.rot;
 }
 
 
 void g2dGetRotation(float* degrees)
 {
-  if (degrees != NULL) *degrees = obj_rot * 180.f / GU_PI;
+  if (degrees != NULL) *degrees = obj.rot * 180.f / GU_PI;
 }
 
 
 void g2dSetRotationRad(float radians)
 {
-  if (radians == obj_rot) return;
-  obj_rot = radians;
-  obj_rot_sin = sinf(radians);
-  obj_rot_cos = cosf(radians);
+  if (radians == obj.rot) return;
+  obj.rot = radians;
+  obj.rot_sin = sinf(radians);
+  obj.rot_cos = cosf(radians);
   if (radians != 0.f) obj_use_rot = true;
 }
 
@@ -853,7 +828,7 @@ void g2dSetRotation(float degrees)
 
 void g2dSetRotationRadRelative(float radians)
 {
-  g2dSetRotationRad(obj_rot + radians);
+  g2dSetRotationRad(obj.rot + radians);
 }
 
 
@@ -867,56 +842,56 @@ void g2dSetRotationRelative(float degrees)
 void g2dResetCrop()
 {
   if (obj_tex == NULL) return;
-  obj_crop_x = 0;
-  obj_crop_y = 0;
-  obj_crop_w = obj_tex->w;
-  obj_crop_h = obj_tex->h;
+  obj.crop_x = 0;
+  obj.crop_y = 0;
+  obj.crop_w = obj_tex->w;
+  obj.crop_h = obj_tex->h;
 }
 
 
 void g2dGetCropXY(int* x, int* y)
 {
   if (obj_tex == NULL) return;
-  if (x != NULL) *x = obj_crop_x;
-  if (y != NULL) *y = obj_crop_y;
+  if (x != NULL) *x = obj.crop_x;
+  if (y != NULL) *y = obj.crop_y;
 }
 
 
 void g2dGetCropWH(int* w, int* h)
 {
   if (obj_tex == NULL) return;
-  if (w != NULL) *w = obj_crop_w;
-  if (h != NULL) *h = obj_crop_h;
+  if (w != NULL) *w = obj.crop_w;
+  if (h != NULL) *h = obj.crop_h;
 }
 
 
 void g2dSetCropXY(int x, int y)
 {
   if (obj_tex == NULL) return;
-  obj_crop_x = x;
-  obj_crop_y = y;
+  obj.crop_x = x;
+  obj.crop_y = y;
 }
 
 
 void g2dSetCropWH(int w, int h)
 {
   if (obj_tex == NULL) return;
-  obj_crop_w = w;
-  obj_crop_h = h;
+  obj.crop_w = w;
+  obj.crop_h = h;
 }
 
 
 void g2dSetCropXYRelative(int x, int y)
 {
   if (obj_tex == NULL) return;
-  g2dSetCropXY(obj_crop_x + x, obj_crop_y + y);
+  g2dSetCropXY(obj.crop_x + x, obj.crop_y + y);
 }
 
 
 void g2dSetCropWHRelative(int w, int h)
 {
   if (obj_tex == NULL) return;
-  g2dSetCropWH(obj_crop_w + w, obj_crop_h + h);
+  g2dSetCropWH(obj.crop_w + w, obj.crop_h + h);
 }
 
 // * Texture functions *
