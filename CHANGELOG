@@ -1,3 +1,18 @@
+Beta 5 :
+ - Improved support of intraFont
+ - Renamed g* functions to g2d*
+ - Removed g2dSetCoord*Relative's third argument
+ - Using constants instead of bools for some g2d* functions (better readability)
+ - Dynamic allocation of the display list, no more artifacts with a small heap
+ - Replaced G2D_FALSE and G2D_TRUE by false and true
+ - Added a global scale factor : g2d(Set/Get/Reset)GlobalScale
+ - Better scaling quality
+ - Lots of code rework
+ - No more swizzling artifacts
+ - Smaller display list size, saves 3/4 megabyte
+ - Forced coordmode with an inverted object is no longer applied
+ - Corrected documentation 
+
 Beta 4 :
  - Refactored code parts
  - Corrected a scaling bug
