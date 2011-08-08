@@ -2,7 +2,7 @@
 
 gLib2D by Geecko - A simple, fast, light-weight 2D graphics library.
 This library has been designed to replace the old graphics.c library
-and to simplify the use of the pspgu.
+and to simplify the use of pspgu.
 The goals : keep it simple, keep it small, keep it fast.
 
 * Known limitations *
@@ -35,6 +35,9 @@ You can support the library by marking your homebrew with
 Please report bugs or submit ideas at :
 geecko.dev@free.fr
 
-Stay tuned on...
+Get the full documentation on :
+http://geecko.dev.free.fr
+
+Also stay tuned on...
 https://github.com/GeeckoDev (contributors would be a plus!)
 http://twitter.com/GeeckoDev
