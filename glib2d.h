@@ -36,7 +36,7 @@
  *
  * Please report bugs or submit ideas at : \n geecko.dev@free.fr \n\n
  * Get the full documentation on : \n http://geecko.dev.free.fr \n\n
- * Also tay tuned on... \n
+ * Also stay tuned on... \n
  * https://github.com/GeeckoDev (contributors would be a plus!) \n
  * http://twitter.com/GeeckoDev
  */
