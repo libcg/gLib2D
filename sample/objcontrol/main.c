@@ -26,7 +26,7 @@ int SetupCallbacks() {
 int main()
 {
   SetupCallbacks();
-  
+
   SceCtrlData pad;
   g2dImage* tex = g2dTexLoad("tex.png",G2D_SWIZZLE);
   int alpha = 255,
@@ -52,10 +52,10 @@ int main()
     if (pad.Buttons & PSP_CTRL_CROSS)    h++;
     if (pad.Buttons & PSP_CTRL_LTRIGGER) rot-=2;
     if (pad.Buttons & PSP_CTRL_RTRIGGER) rot+=2;
-    
+
     // Display
     g2dClear(WHITE);
-    
+
     g2dBeginRects(tex);
     if (tex == NULL) g2dSetColor(RED);
     g2dSetCoordMode(G2D_CENTER);
@@ -65,10 +65,10 @@ int main()
     g2dSetRotation(rot);
     g2dAdd();
     g2dEnd();
-    
+
     g2dFlip(G2D_VSYNC);
   }
-    
+
   sceKernelExitGame();
   return 0;
 }

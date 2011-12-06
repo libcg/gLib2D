@@ -26,17 +26,17 @@ int main()
 {
   SetupCallbacks();
   int rot = 0;
-  
+
   while (1)
   {
     if ((rot++) > 360) rot -= 360;
-    
+
     g2dClear(WHITE);
-    
+
     // Draw the quad
-    
+
     g2dBeginQuads(NULL); // Can be also textured
-    
+
     g2dSetColor(RED);
     g2dSetCoordXY(1*G2D_SCR_W/4,1*G2D_SCR_H/4);
     g2dPush();
@@ -44,7 +44,7 @@ int main()
     g2dSetCoordXYRelative(45,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dSetColor(GREEN);
     g2dSetCoordXY(3*G2D_SCR_W/4,1*G2D_SCR_H/4);
     g2dPush();
@@ -52,7 +52,7 @@ int main()
     g2dSetCoordXYRelative(55,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dSetColor(BLUE);
     g2dSetCoordXY(3*G2D_SCR_W/4,3*G2D_SCR_H/4);
     g2dPush();
@@ -60,7 +60,7 @@ int main()
     g2dSetCoordXYRelative(23,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dSetColor(BLACK);
     g2dSetCoordXY(1*G2D_SCR_W/4,3*G2D_SCR_H/4);
     g2dPush();
@@ -68,14 +68,14 @@ int main()
     g2dSetCoordXYRelative(30,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dEnd();
-    
+
     // Then the rotating lines.
-    
+
     g2dBeginLines(G2D_VOID);
     g2dSetColor(GRAY);
-    
+
     g2dSetCoordXY(1*G2D_SCR_W/4,1*G2D_SCR_H/4);
     g2dAdd();
     g2dPush();
@@ -83,7 +83,7 @@ int main()
     g2dSetCoordXYRelative(45,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dSetCoordXY(3*G2D_SCR_W/4,1*G2D_SCR_H/4);
     g2dAdd();
     g2dPush();
@@ -91,7 +91,7 @@ int main()
     g2dSetCoordXYRelative(55,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dSetCoordXY(3*G2D_SCR_W/4,3*G2D_SCR_H/4);
     g2dAdd();
     g2dPush();
@@ -99,7 +99,7 @@ int main()
     g2dSetCoordXYRelative(23,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dSetCoordXY(1*G2D_SCR_W/4,3*G2D_SCR_H/4);
     g2dAdd();
     g2dPush();
@@ -107,12 +107,12 @@ int main()
     g2dSetCoordXYRelative(30,0);
     g2dAdd();
     g2dPop();
-    
+
     g2dEnd();
-    
+
     g2dFlip(G2D_VSYNC);
   }
-    
+
   sceKernelExitGame();
   return 0;
 }

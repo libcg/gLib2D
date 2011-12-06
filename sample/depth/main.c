@@ -27,13 +27,13 @@ int SetupCallbacks() {
 int main()
 {
   SetupCallbacks();
-  
+
   while (1)
   {
     g2dClear(BLACK); // Clears zbuffer since Z coordinate is used in the loop
-    
+
     g2dBeginRects(NULL);
-    
+
     g2dSetColor(AZURE);
     g2dSetAlpha(255);
     g2dSetScaleWH(50,50);
@@ -51,12 +51,12 @@ int main()
     g2dSetScaleWH(100,67);
     g2dSetCoordXYZ(170,60,1);
     g2dAdd();
-    
+
     g2dEnd();
-    
+
     g2dFlip(G2D_VSYNC);
   }
-    
+
   sceKernelExitGame();
   return 0;
 }

@@ -384,7 +384,7 @@ void _g2dEndLines()
   // Build the vertex list
   if (obj_line_strip)
   {
-    vi = _g2dSetVertex(vi,0,0.f,0.f); 
+    vi = _g2dSetVertex(vi,0,0.f,0.f);
     for (i=1; i<obj_list_size; i+=1)
     {
       vi = _g2dSetVertex(vi,i,0.f,0.f);
@@ -533,7 +533,7 @@ void g2dFlip(g2dEnum flip_mode)
   sceGuFinish();
   sceGuSync(0,0);
   if (flip_mode & G2D_VSYNC) sceDisplayWaitVblankStart();
-  
+
   g2d_disp_buffer.data = g2d_draw_buffer.data;
   g2d_draw_buffer.data = vabsptr(sceGuSwapBuffers());
 
@@ -656,7 +656,7 @@ void g2dSetCoordXYRelative(float x, float y)
     inc_y =  obj.rot_cos*y + obj.rot_sin*x;
   }
   obj.x += inc_x * global_scale;
-  obj.y += inc_y * global_scale;  
+  obj.y += inc_y * global_scale;
 }
 
 
@@ -687,7 +687,7 @@ void g2dResetScale()
     obj.scale_w = obj_tex->w;
     obj.scale_h = obj_tex->h;
   }
-  
+
   obj.scale_w *= global_scale;
   obj.scale_h *= global_scale;
 }
@@ -963,7 +963,7 @@ g2dImage* _g2dTexCreate(int w, int h, bool can_blend)
 {
   g2dImage* tex = malloc(sizeof(g2dImage));
   if (tex == NULL) return NULL;
-    
+
   tex->tw = _getNextPower2(w);
   tex->th = _getNextPower2(h);
   tex->w = w;
@@ -971,13 +971,13 @@ g2dImage* _g2dTexCreate(int w, int h, bool can_blend)
   tex->ratio = (float)w / h;
   tex->swizzled = false;
   tex->can_blend = can_blend;
-  
+
   tex->data = malloc(tex->tw*tex->th*sizeof(g2dColor));
   if (tex->data == NULL) { free(tex); return NULL; }
   memset(tex->data,0,tex->tw*tex->th*sizeof(g2dColor));
-  
+
   return tex;
-} 
+}
 
 
 void g2dTexFree(g2dImage** tex)
@@ -1025,7 +1025,7 @@ g2dImage* _g2dTexLoadPNG(FILE* fp)
   free(line);
   png_read_end(png_ptr, info_ptr);
   png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-  
+
   return tex;
 }
 #endif
@@ -1070,7 +1070,7 @@ g2dImage* _g2dTexLoadJPEG(FILE* fp)
   jpeg_finish_decompress(&dinfo);
   jpeg_destroy_decompress(&dinfo);
   free(line);
-  
+
   return tex;
 }
 #endif
@@ -1119,7 +1119,7 @@ g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
   else tex->swizzled = false;
 
   return tex;
-  
+
   // Load failure... abort
   error:
   if (fp != NULL) fclose(fp);

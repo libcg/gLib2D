@@ -57,16 +57,16 @@ extern "C" {
 
 /**
  * \def false
- * \brief False boolean constant. 
- */ 
+ * \brief False boolean constant.
+ */
 /**
  * \def true
  * \brief True boolean constant.
- */ 
+ */
 /**
  * \typedef bool
  * \brief Boolean variable type.
- */ 
+ */
 #define false (0)
 #define true (!false)
 typedef char bool;
@@ -78,7 +78,7 @@ typedef char bool;
  * Otherwise, this part will be not compiled to gain some space.
  * Enable this to get PNG support, disable to avoid compilation errors
  * when libpng is not linked in the Makefile.
- */ 
+ */
 /**
  * \def USE_JPEG
  * \brief Choose if the JPEG support is enabled.
@@ -86,18 +86,18 @@ typedef char bool;
  * Otherwise, this part will be not compiled to gain some space.
  * Enable this to get JPEG support, disable to avoid compilation errors
  * when libjpeg is not linked in the Makefile.
- */ 
+ */
 #define USE_PNG
 #define USE_JPEG
 
 /**
  * \def G2D_SCR_W
  * \brief Screen width constant, in pixels.
- */ 
+ */
 /**
  * \def G2D_SCR_H
  * \brief Screen height constant, in pixels.
- */ 
+ */
 /**
  * \def G2D_VOID
  * \brief Generic g2dEnum constant, equals to 0 (do nothing).
@@ -112,25 +112,25 @@ typedef char bool;
  *
  * This macro creates a g2dColor from 4 values, red, green, blue and alpha.
  * Input range is from 0 to 255.
- */ 
+ */
 #define G2D_RGBA(r,g,b,a) ((r)|((g)<<8)|((b)<<16)|((a)<<24))
 
 /**
  * \def G2D_GET_R(color)
  * \brief Get red channel value from a g2dColor.
- */ 
+ */
 /**
  * \def G2D_GET_G(color)
  * \brief Get green channel value from a g2dColor.
- */ 
+ */
 /**
  * \def G2D_GET_B(color)
  * \brief Get blue channel value from a g2dColor.
- */ 
+ */
 /**
  * \def G2D_GET_A(color)
  * \brief Get alpha channel value from a g2dColor.
- */ 
+ */
 #define G2D_GET_R(color) (((color)    ) & 0xFF)
 #define G2D_GET_G(color) (((color)>>8 ) & 0xFF)
 #define G2D_GET_B(color) (((color)>>16) & 0xFF)
@@ -141,8 +141,8 @@ typedef char bool;
  * \brief g2dColor modulation.
  *
  * This macro modulates the luminance & alpha of a g2dColor.
- * Input range is from 0 to 255. 
- */ 
+ * Input range is from 0 to 255.
+ */
 #define G2D_MODULATE(color,luminance,alpha) \
 G2D_RGBA((int)(luminance)*G2D_GET_R(color)/255, \
          (int)(luminance)*G2D_GET_G(color)/255, \
@@ -176,7 +176,7 @@ enum g2dColors
   WHITE        = 0xFFFFFFFF,
   LITEGRAY     = 0xFFBFBFBF,
   GRAY         = 0xFF7F7F7F,
-  DARKGRAY     = 0xFF3F3F3F,  
+  DARKGRAY     = 0xFF3F3F3F,
   BLACK        = 0xFF000000
 };
 
@@ -200,7 +200,7 @@ enum g2dColors
  *
  * Change flip properties.
  * Can only be used with g2dFlip.
- */ 
+ */
 /**
  * \enum g2dTex_Mode
  * \brief Texture modes enumeration.
@@ -209,15 +209,15 @@ enum g2dColors
  * Can only be used with g2dTexLoad.
  */
 enum g2dCoord_Mode
-{ 
+{
   G2D_UP_LEFT,
-  G2D_UP_RIGHT, 
+  G2D_UP_RIGHT,
   G2D_DOWN_RIGHT,
   G2D_DOWN_LEFT,
   G2D_CENTER
 };
 enum g2dLine_Mode
-{ 
+{
   G2D_STRIP = 1 /**< Make a line strip. */
 };
 enum g2dFlip_Mode
