@@ -11,9 +11,7 @@
 #include <pspdisplay.h>
 #include <pspgu.h>
 #include <vram.h>
-#include <stdio.h>
 #include <malloc.h>
-#include <string.h>
 #include <math.h>
 
 #ifdef USE_PNG
@@ -22,7 +20,6 @@
 
 #ifdef USE_JPEG
 #include <jpeglib.h>
-#include <jerror.h>
 #endif
 
 #define PSP_LINE_SIZE       (512)

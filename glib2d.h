@@ -55,21 +55,7 @@
 extern "C" {
 #endif
 
-/**
- * \def false
- * \brief False boolean constant.
- */
-/**
- * \def true
- * \brief True boolean constant.
- */
-/**
- * \typedef bool
- * \brief Boolean variable type.
- */
-#define false (0)
-#define true (!false)
-typedef char bool;
+#include <stdbool.h>
 
 /**
  * \def USE_PNG
