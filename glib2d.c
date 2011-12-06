@@ -185,25 +185,6 @@ void* _g2dSetVertex(void* vp, int i, float vx, float vy)
   return (void*)v_p_float;
 }
 
-
-// Insertion sort, because it is a fast and _stable_ sort.
-void _g2dVertexSort()
-{
-  int i, j;
-  Object obj_tmp;
-  for (i=1; i<obj_list_size; i++)
-  {
-    j = i;
-    memcpy(&obj_tmp,obj_list+j,sizeof(Object));
-    while (j>0 && obj_list[j-1].z < obj_tmp.z)
-    {
-      memcpy(obj_list+j,obj_list+j-1,sizeof(Object));
-      j--;
-    }
-    memcpy(obj_list+j,&obj_tmp,sizeof(Object));
-  }
-}
-
 // * Main functions *
 
 void g2dClear(g2dColor color)
@@ -287,9 +268,6 @@ void g2dBeginPoints()
 
 void _g2dEndRects()
 {
-  // Horror : we need to sort the vertices.
-  if (obj_use_z && obj_use_blend) _g2dVertexSort();
-
   // Define vertices properties
   int prim = (obj_use_rot ? GU_TRIANGLES : GU_SPRITES),
       v_obj_nbr = (obj_use_rot ? 6 : 2),
