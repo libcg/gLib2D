@@ -597,7 +597,7 @@ void g2dResetCoord()
 
 void g2dSetCoordMode(g2dCoord_Mode mode)
 {
-  if (mode < G2D_UP_LEFT || mode > G2D_CENTER) return;
+  if (mode > G2D_CENTER) return;
   obj_coord_mode = mode;
 }
 
@@ -976,8 +976,8 @@ g2dImage* _g2dTexLoadPNG(FILE* fp)
   png_infop info_ptr;
   unsigned int sig_read = 0;
   png_uint_32 width, height;
-  int bit_depth, color_type, interlace_type, x, y;
-  u32* line;
+  int bit_depth, color_type, interlace_type;
+  u32 x, y, *line;
   png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
   png_set_error_fn(png_ptr,NULL,NULL,NULL);
   info_ptr = png_create_info_struct(png_ptr);
