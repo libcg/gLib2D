@@ -28,8 +28,8 @@
 #define MALLOC_STEP         (128)
 #define TRANSFORM_STACK_MAX (64)
 #define SLICE_WIDTH         (64)
-#define M_180_PI            (57.29577951f)
-#define M_PI_180            (0.017453293f)
+#define M_180_PI            (57.29578f)
+#define M_PI_180            (0.017453292f)
 
 #define DEFAULT_SIZE       (10)
 #define DEFAULT_COORD_MODE (G2D_UP_LEFT)
