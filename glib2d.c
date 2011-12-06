@@ -43,7 +43,10 @@
 #define CURRENT_TRANSFORM transform_stack[transform_stack_size-1]
 #define I_OBJ obj_list[i]
 
-enum Obj_Types { RECTS, LINES, QUADS, POINTS };
+typedef enum
+{
+  RECTS, LINES, QUADS, POINTS
+} Obj_Type;
 
 typedef struct
 {
@@ -73,7 +76,7 @@ static int transform_stack_size;
 static float global_scale = 1.f;
 // * Object vars *
 static Object *obj_list = NULL, obj;
-static int obj_type;
+static Obj_Type obj_type;
 static int obj_list_size;
 static bool obj_begin = false, obj_line_strip;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
