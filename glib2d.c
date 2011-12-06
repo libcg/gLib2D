@@ -71,12 +71,12 @@ static int transform_stack_size;
 static float global_scale = 1.f;
 // * Object vars *
 static Object *obj_list = NULL, obj;
-static g2dEnum obj_type;
+static int obj_type;
 static int obj_list_size;
 static bool obj_begin = false, obj_line_strip;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
             obj_use_tex_linear, obj_use_tex_repeat;
-static g2dEnum obj_coord_mode;
+static g2dCoord_Mode obj_coord_mode;
 static int obj_colors_count;
 static g2dImage* obj_tex;
 
@@ -254,13 +254,13 @@ void g2dBeginRects(g2dImage* tex)
 }
 
 
-void g2dBeginLines(g2dEnum line_mode)
+void g2dBeginLines(g2dLine_Mode mode)
 {
   if (obj_begin) return;
 
   obj_type = LINES;
   obj_tex = NULL;
-  obj_line_strip = (line_mode & G2D_STRIP);
+  obj_line_strip = (mode & G2D_STRIP);
   _g2dBeginCommon();
 }
 
@@ -523,13 +523,13 @@ void g2dReset()
 }
 
 
-void g2dFlip(g2dEnum flip_mode)
+void g2dFlip(g2dFlip_Mode mode)
 {
   if (scissor) g2dResetScissor();
 
   sceGuFinish();
   sceGuSync(0,0);
-  if (flip_mode & G2D_VSYNC) sceDisplayWaitVblankStart();
+  if (mode & G2D_VSYNC) sceDisplayWaitVblankStart();
 
   g2d_disp_buffer.data = g2d_draw_buffer.data;
   g2d_draw_buffer.data = vabsptr(sceGuSwapBuffers());
@@ -612,10 +612,10 @@ void g2dResetCoord()
 }
 
 
-void g2dSetCoordMode(g2dEnum coord_mode)
+void g2dSetCoordMode(g2dCoord_Mode mode)
 {
-  if (coord_mode < G2D_UP_LEFT || coord_mode > G2D_CENTER) return;
-  obj_coord_mode = coord_mode;
+  if (mode < G2D_UP_LEFT || mode > G2D_CENTER) return;
+  obj_coord_mode = mode;
 }
 
 
@@ -1073,7 +1073,7 @@ g2dImage* _g2dTexLoadJPEG(FILE* fp)
 #endif
 
 
-g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
+g2dImage* g2dTexLoad(char path[], g2dTex_Mode mode)
 {
   if (path == NULL) return NULL;
 
@@ -1104,7 +1104,7 @@ g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode)
   if (tex->w > 512 || tex->h > 512) goto error;
 
   // Swizzling is useless with small textures.
-  if ((tex_mode & G2D_SWIZZLE) && (tex->w >= 16 || tex->h >= 16))
+  if ((mode & G2D_SWIZZLE) && (tex->w >= 16 || tex->h >= 16))
   {
     u8* tmp = malloc(tex->tw*tex->th*PIXEL_SIZE);
     _swizzle(tmp,(u8*)tex->data,tex->tw*PIXEL_SIZE,tex->th);

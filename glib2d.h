@@ -86,7 +86,7 @@ extern "C" {
  */
 /**
  * \def G2D_VOID
- * \brief Generic g2dEnum constant, equals to 0 (do nothing).
+ * \brief Generic constant, equals to 0 (do nothing).
  */
 #define G2D_SCR_W (480)
 #define G2D_SCR_H (272)
@@ -194,27 +194,27 @@ enum g2dColors
  * Change texture properties.
  * Can only be used with g2dTexLoad.
  */
-enum g2dCoord_Mode
+typedef enum
 {
   G2D_UP_LEFT,
   G2D_UP_RIGHT,
   G2D_DOWN_RIGHT,
   G2D_DOWN_LEFT,
   G2D_CENTER
-};
-enum g2dLine_Mode
+} g2dCoord_Mode;
+typedef enum
 {
   G2D_STRIP = 1 /**< Make a line strip. */
-};
-enum g2dFlip_Mode
+} g2dLine_Mode;
+typedef enum
 {
   G2D_VSYNC = 1 /**< Limit the FPS to 60 (synchronized with the screen).
                      Better image quality and less power consumption. */
-};
-enum g2dTex_Mode
+} g2dFlip_Mode;
+typedef enum
 {
   G2D_SWIZZLE = 1 /**< Recommended. Use it to get *more* rendering speed. */
-};
+} g2dTex_Mode;
 
 /**
  * \var g2dAlpha
@@ -224,13 +224,8 @@ enum g2dTex_Mode
  * \var g2dColor
  * \brief Color type.
  */
-/**
- * \var g2dEnum
- * \brief Enumeration type.
- */
 typedef int g2dAlpha;
 typedef unsigned int g2dColor;
-typedef int g2dEnum;
 
 /**
  * \struct g2dImage
@@ -296,7 +291,7 @@ void g2dBeginRects(g2dImage* tex);
  * Two g2dAdd() calls per object.
  * Pass G2D_LINE_STRIP to make a line strip (two calls, then one per object).
  */
-void g2dBeginLines(g2dEnum line_mode);
+void g2dBeginLines(g2dLine_Mode mode);
 
 /**
  * \brief Begins quads rendering.
@@ -344,7 +339,7 @@ void g2dReset();
  * Renders the whole display list to the draw buffer.
  * Inverts framebuffers to display the whole thing.
  */
-void g2dFlip(g2dEnum flip_mode);
+void g2dFlip(g2dFlip_Mode mode);
 
 /**
  * \brief Pushes the current transformation & attribution to a new object.
@@ -392,7 +387,7 @@ void g2dTexFree(g2dImage** tex);
  * textures (useless on small textures), pass G2D_SWIZZLE to enable it.
  * Image support up to 512*512 only (hardware limitation).
  */
-g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode);
+g2dImage* g2dTexLoad(char path[], g2dTex_Mode mode);
 
 /**
  * \brief Resets the current coordinates.
@@ -409,7 +404,7 @@ void g2dResetCoord();
  * This function must be called during object rendering.
  * Defines where the coordinates correspond in the object.
  */
-void g2dSetCoordMode(g2dEnum coord_mode);
+void g2dSetCoordMode(g2dCoord_Mode mode);
 
 /**
  * \brief Gets the current position.
