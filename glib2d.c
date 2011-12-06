@@ -28,6 +28,8 @@
 #define MALLOC_STEP         (128)
 #define TRANSFORM_STACK_MAX (64)
 #define SLICE_WIDTH         (64)
+#define M_180_PI            (57.29577951f)
+#define M_PI_180            (0.017453293f)
 
 #define DEFAULT_SIZE       (10)
 #define DEFAULT_COORD_MODE (G2D_UP_LEFT)
@@ -781,7 +783,7 @@ void g2dGetRotationRad(float* radians)
 
 void g2dGetRotation(float* degrees)
 {
-  if (degrees != NULL) *degrees = obj.rot * 180.f / GU_PI;
+  if (degrees != NULL) *degrees = obj.rot * M_180_PI;
 }
 
 
@@ -797,7 +799,7 @@ void g2dSetRotationRad(float radians)
 
 void g2dSetRotation(float degrees)
 {
-  g2dSetRotationRad(degrees * GU_PI / 180.f);
+  g2dSetRotationRad(degrees * M_PI_180);
 }
 
 
@@ -809,7 +811,7 @@ void g2dSetRotationRadRelative(float radians)
 
 void g2dSetRotationRelative(float degrees)
 {
-  g2dSetRotationRadRelative(degrees * GU_PI / 180.f);
+  g2dSetRotationRadRelative(degrees * M_PI_180);
 }
 
 // * Crop functions *
