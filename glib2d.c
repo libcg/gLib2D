@@ -80,7 +80,7 @@ static Obj_Type obj_type;
 static int obj_list_size;
 static bool obj_begin = false, obj_line_strip;
 static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
-            obj_use_tex_linear, obj_use_tex_repeat;
+            obj_use_tex_linear, obj_use_tex_repeat, obj_use_int;
 static g2dCoord_Mode obj_coord_mode;
 static int obj_colors_count;
 static g2dImage* obj_tex;
@@ -183,6 +183,12 @@ void* _g2dSetVertex(void* vp, int i, float vx, float vy)
     v_p_float[0] = I_OBJ.rot_x - I_OBJ.rot_sin*ty + I_OBJ.rot_cos*tx,
     v_p_float[1] = I_OBJ.rot_y + I_OBJ.rot_cos*ty + I_OBJ.rot_sin*tx;
   }
+  
+  if (obj_use_int)
+  {
+    v_p_float[0] = floorf(v_p_float[0]);
+    v_p_float[1] = floorf(v_p_float[1]);
+  }
   v_p_float[2] = I_OBJ.z;
 
   v_p_float += 3;
@@ -223,6 +229,7 @@ void _g2dBeginCommon()
   obj_use_vert_color = false;
   obj_use_blend = false;
   obj_use_rot = false;
+  obj_use_int = false;
   obj_colors_count = 0;
   g2dReset();
 
@@ -645,6 +652,12 @@ void g2dSetCoordXYZRelative(float x, float y, float z)
   g2dSetCoordXYRelative(x,y);
   obj.z += z * global_scale;
   if (z != 0.f) obj_use_z = true;
+}
+
+
+void g2dSetCoordInteger(bool use)
+{
+  obj_use_int = use;
 }
 
 // * Scale functions *

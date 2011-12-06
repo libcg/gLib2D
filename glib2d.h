@@ -457,6 +457,15 @@ void g2dSetCoordXYRelative(float x, float y);
 void g2dSetCoordXYZRelative(float x, float y, float z);
 
 /**
+ * \brief Use integer coordinates.
+ * @param use false to desactivate (better look, by default),
+              true to activate (can be useful when you have glitches).
+ *
+ * This function must be called during object rendering.
+ */
+void g2dSetCoordInteger(bool use);
+
+/**
  * \brief Resets the global scale.
  *
  * This function resets the global scale to 1.f.
