@@ -51,6 +51,10 @@
 #ifndef GLIB2D_H
 #define GLIB2D_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \def false
  * \brief False boolean constant. 
@@ -795,5 +799,9 @@ void g2dResetScissor();
  * Pixel draw will be skipped outside this rectangle.
  */
 void g2dSetScissor(int x, int y, int w, int h);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
