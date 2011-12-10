@@ -73,8 +73,17 @@ extern "C" {
  * Enable this to get JPEG support, disable to avoid compilation errors
  * when libjpeg is not linked in the Makefile.
  */
+/**
+ * \def USE_VFPU
+ * \brief Choose if the VFPU support is enabled.
+ *
+ * Otherwise, this part will be not compiled to use the standard math library.
+ * Enable this to greatly improve performance with 2d rotations. You SHOULD use
+ * PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU) to avoid crashes.
+ */
 #define USE_PNG
 #define USE_JPEG
+//#define USE_VFPU
 
 /**
  * \def G2D_SCR_W

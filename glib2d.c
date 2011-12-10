@@ -183,7 +183,7 @@ void* _g2dSetVertex(void* vp, int i, float vx, float vy)
     v_p_float[0] = I_OBJ.rot_x - I_OBJ.rot_sin*ty + I_OBJ.rot_cos*tx,
     v_p_float[1] = I_OBJ.rot_y + I_OBJ.rot_cos*ty + I_OBJ.rot_sin*tx;
   }
-  
+
   if (obj_use_int)
   {
     v_p_float[0] = floorf(v_p_float[0]);
@@ -195,6 +195,22 @@ void* _g2dSetVertex(void* vp, int i, float vx, float vy)
 
   return (void*)v_p_float;
 }
+
+
+#ifdef USE_VFPU
+void vfpu_sincosf(float x, float* s, float* c)
+{
+  __asm__ volatile (
+    "mtv    %2, s000\n"          // s000 = x
+    "vcst.s s001, VFPU_2_PI\n"   // s001 = 2/pi
+    "vmul.s s000, s000, s001\n"  // s000 = s000*s001
+    "vrot.p c010, s000, [s,c]\n" // s010 = sinf(s000), s011 = cosf(s000)
+    "mfv    %0, s010\n"          // *s = s010
+    "mfv    %1, S011\n"          // *c = s011
+    : "=r"(*s), "=r"(*c) : "r"(x)
+  );
+}
+#endif
 
 // * Main functions *
 
@@ -807,8 +823,11 @@ void g2dSetRotationRad(float radians)
 {
   if (radians == obj.rot) return;
   obj.rot = radians;
-  obj.rot_sin = sinf(radians);
-  obj.rot_cos = cosf(radians);
+  #ifdef USE_VFPU
+  vfpu_sincosf(radians, &obj.rot_sin, &obj.rot_cos);
+  #else
+  sincosf(radians, &obj.rot_sin, &obj.rot_cos);
+  #endif
   if (radians != 0.f) obj_use_rot = true;
 }
 
