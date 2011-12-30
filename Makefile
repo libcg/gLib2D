@@ -10,5 +10,5 @@ include $(PSPSDK)/lib/build.mak
 
 install: all
 	mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
-	cp src/*.h $(PSPDIR)/include
+	cp *.h $(PSPDIR)/include
 	cp *.a $(PSPDIR)/lib
