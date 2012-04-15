@@ -94,53 +94,9 @@ g2dImage g2d_draw_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
 
 // * Internal functions *
 
-void _g2dInit()
-{
-  // Display list allocation
-  list = malloc(256*1024);
-
-  // Init & setup GU
-  sceGuInit();
-  sceGuStart(GU_DIRECT,list);
-
-  sceGuDrawBuffer(GU_PSM_8888,g2d_draw_buffer.data,PSP_LINE_SIZE);
-  sceGuDispBuffer(G2D_SCR_W,G2D_SCR_H,g2d_disp_buffer.data,PSP_LINE_SIZE);
-  sceGuDepthBuffer((void*)(FRAMEBUFFER_SIZE*2),PSP_LINE_SIZE);
-  sceGuOffset(2048-(G2D_SCR_W/2),2048-(G2D_SCR_H/2));
-  sceGuViewport(2048,2048,G2D_SCR_W,G2D_SCR_H);
-
-  g2d_draw_buffer.data = vabsptr(g2d_draw_buffer.data);
-  g2d_disp_buffer.data = vabsptr(g2d_disp_buffer.data);
-
-  g2dResetScissor();
-  sceGuDepthRange(65535,0);
-  sceGuClearDepth(65535);
-  sceGuAlphaFunc(GU_GREATER,0,0xff);
-  sceGuDepthFunc(GU_LEQUAL);
-  sceGuBlendFunc(GU_ADD,GU_SRC_ALPHA,GU_ONE_MINUS_SRC_ALPHA,0,0);
-  sceGuTexFunc(GU_TFX_MODULATE,GU_TCC_RGBA);
-  sceGuTexFilter(GU_LINEAR,GU_LINEAR);
-  sceGuShadeModel(GU_SMOOTH);
-
-  sceGuDisable(GU_CULL_FACE);
-  sceGuDisable(GU_CLIP_PLANES);
-  sceGuDisable(GU_DITHER);
-  sceGuEnable(GU_ALPHA_TEST);
-  sceGuEnable(GU_SCISSOR_TEST);
-  sceGuEnable(GU_BLEND);
-
-  sceGuFinish();
-  sceGuSync(0,0);
-  sceDisplayWaitVblankStart();
-  sceGuDisplay(GU_TRUE);
-
-  init = true;
-}
-
-
 void _g2dStart()
 {
-  if (!init) _g2dInit();
+  if (!init) g2dInit();
 
   sceKernelDcacheWritebackAll();
   sceGuStart(GU_DIRECT,list);
@@ -213,6 +169,63 @@ void vfpu_sincosf(float x, float* s, float* c)
 #endif
 
 // * Main functions *
+
+void g2dInit()
+{
+  if (init) return;
+
+  // Display list allocation
+  list = malloc(256*1024);
+
+  // Init & setup GU
+  sceGuInit();
+  sceGuStart(GU_DIRECT,list);
+
+  sceGuDrawBuffer(GU_PSM_8888,g2d_draw_buffer.data,PSP_LINE_SIZE);
+  sceGuDispBuffer(G2D_SCR_W,G2D_SCR_H,g2d_disp_buffer.data,PSP_LINE_SIZE);
+  sceGuDepthBuffer((void*)(FRAMEBUFFER_SIZE*2),PSP_LINE_SIZE);
+  sceGuOffset(2048-(G2D_SCR_W/2),2048-(G2D_SCR_H/2));
+  sceGuViewport(2048,2048,G2D_SCR_W,G2D_SCR_H);
+
+  g2d_draw_buffer.data = vabsptr(g2d_draw_buffer.data);
+  g2d_disp_buffer.data = vabsptr(g2d_disp_buffer.data);
+
+  g2dResetScissor();
+  sceGuDepthRange(65535,0);
+  sceGuClearDepth(65535);
+  sceGuAlphaFunc(GU_GREATER,0,0xff);
+  sceGuDepthFunc(GU_LEQUAL);
+  sceGuBlendFunc(GU_ADD,GU_SRC_ALPHA,GU_ONE_MINUS_SRC_ALPHA,0,0);
+  sceGuTexFunc(GU_TFX_MODULATE,GU_TCC_RGBA);
+  sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+  sceGuShadeModel(GU_SMOOTH);
+
+  sceGuDisable(GU_CULL_FACE);
+  sceGuDisable(GU_CLIP_PLANES);
+  sceGuDisable(GU_DITHER);
+  sceGuEnable(GU_ALPHA_TEST);
+  sceGuEnable(GU_SCISSOR_TEST);
+  sceGuEnable(GU_BLEND);
+
+  sceGuFinish();
+  sceGuSync(0,0);
+  sceDisplayWaitVblankStart();
+  sceGuDisplay(GU_TRUE);
+
+  init = true;
+}
+
+
+void g2dTerm()
+{
+  if (!init) return;
+ 
+  sceGuTerm();
+
+  free(list);
+  
+  init = false;
+}
 
 void g2dClear(g2dColor color)
 {

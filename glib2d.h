@@ -264,6 +264,21 @@ extern g2dImage g2d_draw_buffer;
 extern g2dImage g2d_disp_buffer;
 
 /**
+ * \brief Initializes the library.
+ *
+ * This function will create a GU context and setup the display buffers.
+ * Automatically called by the other functions.
+ */
+void g2dInit();
+
+/**
+ * \brief Shutdowns the library.
+ *
+ * This function will destroy the GU context.
+ */
+void g2dTerm();
+
+/**
  * \brief Clears screen & depth buffer.
  * @param color Screen clear color
  *
