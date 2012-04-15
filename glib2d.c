@@ -175,7 +175,7 @@ void g2dInit()
   if (init) return;
 
   // Display list allocation
-  list = malloc(256*1024);
+  list = malloc(512*1024);
 
   // Init & setup GU
   sceGuInit();
