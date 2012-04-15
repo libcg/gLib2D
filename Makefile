@@ -1,7 +1,7 @@
 PSPSDK = $(shell psp-config --pspsdk-path)
 PSPDIR = $(shell psp-config --psp-prefix)
 
-CFLAGS = -O2 -G0
+CFLAGS = -O2 -G0 -g
 
 OBJS = glib2d.o
 TARGET_LIB = libglib2d.a
