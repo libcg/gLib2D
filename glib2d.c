@@ -27,7 +27,7 @@
 #define FRAMEBUFFER_SIZE    (PSP_LINE_SIZE*G2D_SCR_H*PIXEL_SIZE)
 #define MALLOC_STEP         (128)
 #define TRANSFORM_STACK_MAX (64)
-#define SLICE_WIDTH         (64)
+#define SLICE_WIDTH         (64.f)
 #define M_180_PI            (57.29578f)
 #define M_PI_180            (0.017453292f)
 
@@ -320,7 +320,7 @@ void _g2dEndRects()
                v_color_size * sizeof(g2dColor) +
                v_coord_size * sizeof(float),
       v_type = GU_VERTEX_32BITF | GU_TRANSFORM_2D,
-      n_slices = -1, i;
+      i;
 
   if (obj_tex != NULL)    v_type |= GU_TEXTURE_16BIT;
   if (obj_use_vert_color) v_type |= GU_COLOR_8888;
@@ -332,11 +332,10 @@ void _g2dEndRects()
   }
   else // Can use texture slicing for tremendous performance :)
   {
-    for (n_slices=0, i=0; i!=obj_list_size; i++)
+    for (v_nbr=0, i=0; i<obj_list_size; i++)
     {
-      n_slices += (int)(I_OBJ.crop_w/SLICE_WIDTH)+1;
+      v_nbr += v_obj_nbr * ceilf(I_OBJ.crop_w/SLICE_WIDTH);
     }
-    v_nbr = v_obj_nbr * n_slices;
   }
 
   // Allocate vertex list memory
@@ -354,7 +353,7 @@ void _g2dEndRects()
       }
       else // Use texture slicing
       {
-        float u, step = (float)SLICE_WIDTH/I_OBJ.crop_w;
+        float u, step = SLICE_WIDTH/I_OBJ.crop_w;
         for (u=0.f; u<1.f; u+=step)
         {
           vi = _g2dSetVertex(vi,i,u,0.f);
