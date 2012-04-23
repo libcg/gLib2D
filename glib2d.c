@@ -983,7 +983,7 @@ void _swizzle(unsigned char *dest, unsigned char *source, int width, int height)
 }
 
 
-g2dImage* _g2dTexCreate(int w, int h, bool can_blend)
+g2dImage* g2dTexCreate(int w, int h, bool can_blend)
 {
   g2dImage* tex = malloc(sizeof(g2dImage));
   if (tex == NULL) return NULL;
@@ -1037,7 +1037,7 @@ g2dImage* _g2dTexLoadPNG(FILE* fp)
   if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(png_ptr);
   png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
-  g2dImage* tex = _g2dTexCreate(width,height,true);
+  g2dImage* tex = g2dTexCreate(width,height,true);
   line = malloc(width * 4);
   for (y = 0; y < height; y++) {
     png_read_row(png_ptr, (u8*) line, NULL);
@@ -1067,7 +1067,7 @@ g2dImage* _g2dTexLoadJPEG(FILE* fp)
   int width = dinfo.image_width;
   int height = dinfo.image_height;
   jpeg_start_decompress(&dinfo);
-  g2dImage* tex = _g2dTexCreate(width,height,false);
+  g2dImage* tex = g2dTexCreate(width,height,false);
   u8* line = (u8*) malloc(width * 3);
   if (dinfo.jpeg_color_space == JCS_GRAYSCALE) {
     while (dinfo.output_scanline < dinfo.output_height) {

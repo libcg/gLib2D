@@ -391,6 +391,16 @@ void g2dPush();
 void g2dPop();
 
 /**
+ * \brief Creates a new blank texture.
+ * @param w Width of the texture.
+ * @param h Height of the texture.
+ * @param can_blend Indicate if blending will be used.
+ *
+ * This function returns NULL on allocation fail.
+ */
+g2dImage* g2dTexCreate(int w, int h, bool can_blend);
+
+/**
  * \brief Frees an image & set its pointer to NULL.
  * @param tex Pointer to the variable which contains the image pointer.
  *
