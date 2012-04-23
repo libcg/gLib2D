@@ -218,7 +218,7 @@ typedef enum
 typedef enum
 {
   G2D_VSYNC = 1 /**< Limit the FPS to 60 (synchronized with the screen).
-                     Better image quality and less power consumption. */
+                     Better quality and less power consumption. */
 } g2dFlip_Mode;
 typedef enum
 {
@@ -237,8 +237,8 @@ typedef int g2dAlpha;
 typedef unsigned int g2dColor;
 
 /**
- * \struct g2dImage
- * \brief Image structure.
+ * \struct g2dTexture
+ * \brief Texture structure.
  */
 typedef struct
 {
@@ -249,7 +249,7 @@ typedef struct
   float ratio;    /**< Width/height ratio. */
   bool swizzled;  /**< Is the texture swizzled ? */
   g2dColor* data; /**< Pointer to raw data. */
-} g2dImage;
+} g2dTexture;
 
 /**
  * \var g2d_draw_buffer
@@ -259,8 +259,8 @@ typedef struct
  * \var g2d_disp_buffer
  * \brief The current display buffer as a texture.
  */
-extern g2dImage g2d_draw_buffer;
-extern g2dImage g2d_disp_buffer;
+extern g2dTexture g2d_draw_buffer;
+extern g2dTexture g2d_disp_buffer;
 
 /**
  * \brief Initializes the library.
@@ -304,7 +304,7 @@ void g2dClearZ();
  * g2dBegin*() / g2dEnd() couple can be called multiple times in the loop,
  * to render multiple textures.
  */
-void g2dBeginRects(g2dImage* tex);
+void g2dBeginRects(g2dTexture* tex);
 
 /**
  * \brief Begins lines rendering.
@@ -326,7 +326,7 @@ void g2dBeginLines(g2dLine_Mode mode);
  * g2dBegin*() / g2dEnd() couple can be called multiple times in the loop,
  * to render multiple textures.
  */
-void g2dBeginQuads(g2dImage* tex);
+void g2dBeginQuads(g2dTexture* tex);
 
 /**
  * \brief Begins points rendering.
@@ -396,30 +396,30 @@ void g2dPop();
  *
  * This function returns NULL on allocation fail.
  */
-g2dImage* g2dTexCreate(int w, int h);
+g2dTexture* g2dTexCreate(int w, int h);
 
 /**
- * \brief Frees an image & set its pointer to NULL.
- * @param tex Pointer to the variable which contains the image pointer.
+ * \brief Frees a texture & set its pointer to NULL.
+ * @param tex Pointer to the variable which contains the texture pointer.
  *
- * This function is used to gain memory when an image is useless.
+ * This function is used to gain memory when a texture is useless.
  * Must pass the pointer to the variable which contains the pointer,
  * to set it to NULL (passing NULL to a g2dBegin* function is safe).
  */
-void g2dTexFree(g2dImage** tex);
+void g2dTexFree(g2dTexture** tex);
 
 /**
  * \brief Loads an image.
  * @param path Path to the file.
  * @param tex_mode A g2dTex_Mode constant.
- * @returns Pointer to the image.
+ * @returns Pointer to the generated texture.
  *
  * This function loads an image file. There is support for PNG & JPEG files
  * (if USE_PNG and USE_JPEG are defined). Swizzling is enabled only for 16*16+
  * textures (useless on small textures), pass G2D_SWIZZLE to enable it.
- * Image support up to 512*512 only (hardware limitation).
+ * Texture supported up to 512*512 in size only (hardware limitation).
  */
-g2dImage* g2dTexLoad(char path[], g2dTex_Mode mode);
+g2dTexture* g2dTexLoad(char path[], g2dTex_Mode mode);
 
 /**
  * \brief Resets the current coordinates.
@@ -509,7 +509,7 @@ void g2dResetGlobalScale();
  * \brief Resets the current scale.
  *
  * This function must be called during object rendering.
- * Sets the scale to the current image size or (10,10).
+ * Sets the scale to the current texture size or (10,10).
  */
 void g2dResetScale();
 
@@ -547,7 +547,7 @@ void g2dSetGlobalScale(float scale);
  * This function must be called during object rendering.
  * g2dResetScale() is called, then width & height scale are
  * multiplied by these values.
- * Negative values can be passed to invert the image.
+ * Negative values can be passed to invert the texture.
  */
 void g2dSetScale(float w, float h);
 
@@ -557,7 +557,7 @@ void g2dSetScale(float w, float h);
  * @param h New height, in pixels.
  *
  * This function must be called during object rendering.
- * Negative values can be passed to invert the image.
+ * Negative values can be passed to invert the texture.
  */
 void g2dSetScaleWH(float w, float h);
 
@@ -568,7 +568,7 @@ void g2dSetScaleWH(float w, float h);
  *
  * This function must be called during object rendering.
  * Current width & height scale are multiplied by these values.
- * Negative values can be passed to invert the image.
+ * Negative values can be passed to invert the texture.
  */
 void g2dSetScaleRelative(float w, float h);
 
@@ -578,7 +578,7 @@ void g2dSetScaleRelative(float w, float h);
  * @param h New height to increment, in pixels.
  *
  * This function must be called during object rendering.
- * Negative values can be passed to invert the image.
+ * Negative values can be passed to invert the texture.
  */
 void g2dSetScaleWHRelative(float w, float h);
 
@@ -730,7 +730,7 @@ void g2dGetCropWH(int* w, int* h);
  * @param y New y, in pixels.
  *
  * This function must be called during object rendering. Defines crop position.
- * If the rectangle is larger or next to the image, texture will be repeated
+ * If the rectangle is larger or next to the texture, it will be repeated
  * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
 void g2dSetCropXY(int x, int y);
@@ -741,7 +741,7 @@ void g2dSetCropXY(int x, int y);
  * @param h New height, in pixels.
  *
  * This function must be called during object rendering. Defines crop size.
- * If the rectangle is larger or next to the image, texture will be repeated
+ * If the rectangle is larger or next to the texture, it will be repeated
  * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
 void g2dSetCropWH(int w, int h);
@@ -752,7 +752,7 @@ void g2dSetCropWH(int w, int h);
  * @param y New y increment, in pixels.
  *
  * This function must be called during object rendering. Defines crop position.
- * If the rectangle is larger or next to the image, texture will be repeated
+ * If the rectangle is larger or next to the texture, texture will be repeated
  * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
 void g2dSetCropXYRelative(int x, int y);
@@ -763,7 +763,7 @@ void g2dSetCropXYRelative(int x, int y);
  * @param h New height increment, in pixels.
  *
  * This function must be called during object rendering. Defines crop size.
- * If the rectangle is larger or next to the image, texture will be repeated
+ * If the rectangle is larger or next to the texture, texture will be repeated
  * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
 void g2dSetCropWHRelative(int w, int h);

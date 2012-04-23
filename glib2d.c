@@ -83,12 +83,12 @@ static bool obj_use_z, obj_use_vert_color, obj_use_rot,
             obj_use_tex_linear, obj_use_tex_repeat, obj_use_int;
 static g2dCoord_Mode obj_coord_mode;
 static int obj_colors_count;
-static g2dImage* obj_tex;
+static g2dTexture* obj_tex;
 
-g2dImage g2d_draw_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
+g2dTexture g2d_draw_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
                              (float)G2D_SCR_W/G2D_SCR_H, false,
                              (g2dColor*)FRAMEBUFFER_SIZE },
-         g2d_disp_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
+           g2d_disp_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
                              (float)G2D_SCR_W/G2D_SCR_H, false,
                              (g2dColor*)0 };
 
@@ -265,7 +265,7 @@ void _g2dBeginCommon()
 }
 
 
-void g2dBeginRects(g2dImage* tex)
+void g2dBeginRects(g2dTexture* tex)
 {
   if (obj_begin) return;
 
@@ -286,7 +286,7 @@ void g2dBeginLines(g2dLine_Mode mode)
 }
 
 
-void g2dBeginQuads(g2dImage* tex)
+void g2dBeginQuads(g2dTexture* tex)
 {
   if (obj_begin) return;
 
@@ -968,9 +968,9 @@ void _swizzle(unsigned char *dest, unsigned char *source, int width, int height)
 }
 
 
-g2dImage* g2dTexCreate(int w, int h)
+g2dTexture* g2dTexCreate(int w, int h)
 {
-  g2dImage* tex = malloc(sizeof(g2dImage));
+  g2dTexture* tex = malloc(sizeof(g2dTexture));
   if (tex == NULL) return NULL;
 
   tex->tw = _getNextPower2(w);
@@ -988,7 +988,7 @@ g2dImage* g2dTexCreate(int w, int h)
 }
 
 
-void g2dTexFree(g2dImage** tex)
+void g2dTexFree(g2dTexture** tex)
 {
   if (tex == NULL) return;
   free((*tex)->data);
@@ -998,7 +998,7 @@ void g2dTexFree(g2dImage** tex)
 
 
 #ifdef USE_PNG
-g2dImage* _g2dTexLoadPNG(FILE* fp)
+g2dTexture* _g2dTexLoadPNG(FILE* fp)
 {
   png_structp png_ptr;
   png_infop info_ptr;
@@ -1021,7 +1021,7 @@ g2dImage* _g2dTexLoadPNG(FILE* fp)
   if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(png_ptr);
   png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
-  g2dImage* tex = g2dTexCreate(width,height);
+  g2dTexture* tex = g2dTexCreate(width,height);
   line = malloc(width * 4);
   for (y = 0; y < height; y++) {
     png_read_row(png_ptr, (u8*) line, NULL);
@@ -1040,7 +1040,7 @@ g2dImage* _g2dTexLoadPNG(FILE* fp)
 
 
 #ifdef USE_JPEG
-g2dImage* _g2dTexLoadJPEG(FILE* fp)
+g2dTexture* _g2dTexLoadJPEG(FILE* fp)
 {
   struct jpeg_decompress_struct dinfo;
   struct jpeg_error_mgr jerr;
@@ -1051,7 +1051,7 @@ g2dImage* _g2dTexLoadJPEG(FILE* fp)
   int width = dinfo.image_width;
   int height = dinfo.image_height;
   jpeg_start_decompress(&dinfo);
-  g2dImage* tex = g2dTexCreate(width,height);
+  g2dTexture* tex = g2dTexCreate(width,height);
   u8* line = (u8*) malloc(width * 3);
   if (dinfo.jpeg_color_space == JCS_GRAYSCALE) {
     while (dinfo.output_scanline < dinfo.output_height) {
@@ -1084,11 +1084,11 @@ g2dImage* _g2dTexLoadJPEG(FILE* fp)
 #endif
 
 
-g2dImage* g2dTexLoad(char path[], g2dTex_Mode mode)
+g2dTexture* g2dTexLoad(char path[], g2dTex_Mode mode)
 {
   if (path == NULL) return NULL;
 
-  g2dImage* tex = NULL;
+  g2dTexture* tex = NULL;
   FILE* fp = NULL;
   if ((fp = fopen(path,"rb")) == NULL) goto error;
 
