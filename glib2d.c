@@ -79,17 +79,17 @@ static Object *obj_list = NULL, obj;
 static Obj_Type obj_type;
 static int obj_list_size;
 static bool obj_begin = false, obj_line_strip;
-static bool obj_use_z, obj_use_vert_color, obj_use_blend, obj_use_rot,
+static bool obj_use_z, obj_use_vert_color, obj_use_rot,
             obj_use_tex_linear, obj_use_tex_repeat, obj_use_int;
 static g2dCoord_Mode obj_coord_mode;
 static int obj_colors_count;
 static g2dImage* obj_tex;
 
 g2dImage g2d_draw_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
-                             (float)G2D_SCR_W/G2D_SCR_H, false, false,
+                             (float)G2D_SCR_W/G2D_SCR_H, false,
                              (g2dColor*)FRAMEBUFFER_SIZE },
          g2d_disp_buffer = { 512, 512, G2D_SCR_W, G2D_SCR_H,
-                             (float)G2D_SCR_W/G2D_SCR_H, false, false,
+                             (float)G2D_SCR_W/G2D_SCR_H, false,
                              (g2dColor*)0 };
 
 // * Internal functions *
@@ -256,7 +256,6 @@ void _g2dBeginCommon()
 
   obj_use_z = false;
   obj_use_vert_color = false;
-  obj_use_blend = false;
   obj_use_rot = false;
   obj_use_int = false;
   obj_colors_count = 0;
@@ -496,8 +495,6 @@ void g2dEnd()
   // Manage pspgu extensions
   if (obj_use_z)          sceGuEnable(GU_DEPTH_TEST);
   else                    sceGuDisable(GU_DEPTH_TEST);
-  if (obj_use_blend)      sceGuEnable(GU_BLEND);
-  else                    sceGuDisable(GU_BLEND);
   if (obj_use_vert_color) sceGuColor(WHITE);
   else                    sceGuColor(obj_list[0].color);
   if (obj_tex == NULL)    sceGuDisable(GU_TEXTURE_2D);
@@ -522,7 +519,6 @@ void g2dEnd()
   }
 
   sceGuColor(WHITE);
-  sceGuEnable(GU_BLEND);
 
   obj_begin = false;
   if (obj_use_z) zclear = true;
@@ -790,7 +786,6 @@ void g2dSetColor(g2dColor color)
 {
   obj.color = color;
   if (++obj_colors_count > 1) obj_use_vert_color = true;
-  if (G2D_GET_A(obj.color) < 255) obj_use_blend = true;
 }
 
 
@@ -800,7 +795,6 @@ void g2dSetAlpha(g2dAlpha alpha)
   if (alpha > 255) alpha = 255;
   obj.alpha = alpha;
   if (++obj_colors_count > 1) obj_use_vert_color = true;
-  if (obj.alpha < 255) obj_use_blend = true;
 }
 
 
@@ -925,7 +919,6 @@ void g2dResetTex()
   if (obj_tex == NULL) return;
   obj_use_tex_repeat = false;
   obj_use_tex_linear = true;
-  if (obj_tex->can_blend) obj_use_blend = true;
 }
 
 
@@ -933,14 +926,6 @@ void g2dSetTexRepeat(bool use)
 {
   if (obj_tex == NULL) return;
   obj_use_tex_repeat = use;
-}
-
-
-void g2dSetTexBlend(bool use)
-{
-  if (obj_tex == NULL) return;
-  if (!obj_tex->can_blend) return;
-  obj_use_blend = use;
 }
 
 
@@ -983,7 +968,7 @@ void _swizzle(unsigned char *dest, unsigned char *source, int width, int height)
 }
 
 
-g2dImage* g2dTexCreate(int w, int h, bool can_blend)
+g2dImage* g2dTexCreate(int w, int h)
 {
   g2dImage* tex = malloc(sizeof(g2dImage));
   if (tex == NULL) return NULL;
@@ -994,7 +979,6 @@ g2dImage* g2dTexCreate(int w, int h, bool can_blend)
   tex->h = h;
   tex->ratio = (float)w / h;
   tex->swizzled = false;
-  tex->can_blend = can_blend;
 
   tex->data = malloc(tex->tw*tex->th*sizeof(g2dColor));
   if (tex->data == NULL) { free(tex); return NULL; }
@@ -1037,7 +1021,7 @@ g2dImage* _g2dTexLoadPNG(FILE* fp)
   if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(png_ptr);
   png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
-  g2dImage* tex = g2dTexCreate(width,height,true);
+  g2dImage* tex = g2dTexCreate(width,height);
   line = malloc(width * 4);
   for (y = 0; y < height; y++) {
     png_read_row(png_ptr, (u8*) line, NULL);
@@ -1067,7 +1051,7 @@ g2dImage* _g2dTexLoadJPEG(FILE* fp)
   int width = dinfo.image_width;
   int height = dinfo.image_height;
   jpeg_start_decompress(&dinfo);
-  g2dImage* tex = g2dTexCreate(width,height,false);
+  g2dImage* tex = g2dTexCreate(width,height);
   u8* line = (u8*) malloc(width * 3);
   if (dinfo.jpeg_color_space == JCS_GRAYSCALE) {
     while (dinfo.output_scanline < dinfo.output_height) {

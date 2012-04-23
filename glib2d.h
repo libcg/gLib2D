@@ -248,7 +248,6 @@ typedef struct
   int h;          /**< Texture height, as seen when drawing. */
   float ratio;    /**< Width/height ratio. */
   bool swizzled;  /**< Is the texture swizzled ? */
-  bool can_blend; /**< Can the texture blend ? */
   g2dColor* data; /**< Pointer to raw data. */
 } g2dImage;
 
@@ -394,11 +393,10 @@ void g2dPop();
  * \brief Creates a new blank texture.
  * @param w Width of the texture.
  * @param h Height of the texture.
- * @param can_blend Indicate if blending will be used.
  *
  * This function returns NULL on allocation fail.
  */
-g2dImage* g2dTexCreate(int w, int h, bool can_blend);
+g2dImage* g2dTexCreate(int w, int h);
 
 /**
  * \brief Frees an image & set its pointer to NULL.
@@ -784,16 +782,6 @@ void g2dResetTex();
  * This function must be called during object rendering.
  */
 void g2dSetTexRepeat(bool use);
-
-/**
- * \brief Use alpha blending with the texture.
- * @param use true to activate (better look, by default),
-              false to desactivate (better performance).
- *
- * This function must be called during object rendering.
- * Automaticaly disabled when g2dImage::can_blend is set to false.
- */
-void g2dSetTexBlend(bool use);
 
 /**
  * \brief Use the bilinear filter with the texture.
