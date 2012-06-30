@@ -26,9 +26,8 @@
  *
  * \section copyright License
  *
- * This work is licensed under the Creative Commons BY-SA 3.0 License. \n
- * See http://creativecommons.org/licenses/by-sa/3.0/ or the LICENSE file
- * for more details. \n
+ * This work is licensed under the LGPLv3 License. \n
+ * See the LICENSE file for more details. \n
  * You can support the library by marking your homebrew with
  * "Using gLib2D by Geecko".
  *
