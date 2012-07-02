@@ -34,9 +34,10 @@
 #include <jpeglib.h>
 #endif
 
-#define PSP_LINE_SIZE       (512)
+#define LIST_SIZE           (524288)
+#define LINE_SIZE           (512)
 #define PIXEL_SIZE          (4)
-#define FRAMEBUFFER_SIZE    (PSP_LINE_SIZE*G2D_SCR_H*PIXEL_SIZE)
+#define FRAMEBUFFER_SIZE    (LINE_SIZE*G2D_SCR_H*PIXEL_SIZE)
 #define MALLOC_STEP         (128)
 #define TRANSFORM_STACK_MAX (64)
 #define SLICE_WIDTH         (64.f)
@@ -110,7 +111,7 @@ void _g2dStart()
 {
   if (!init) g2dInit();
 
-  sceKernelDcacheWritebackAll();
+  sceKernelDcacheWritebackRange(list,LIST_SIZE);
   sceGuStart(GU_DIRECT,list);
   start = true;
 }
@@ -187,15 +188,15 @@ void g2dInit()
   if (init) return;
 
   // Display list allocation
-  list = malloc(512*1024);
+  list = malloc(LIST_SIZE);
 
   // Init & setup GU
   sceGuInit();
   sceGuStart(GU_DIRECT,list);
 
-  sceGuDrawBuffer(GU_PSM_8888,g2d_draw_buffer.data,PSP_LINE_SIZE);
-  sceGuDispBuffer(G2D_SCR_W,G2D_SCR_H,g2d_disp_buffer.data,PSP_LINE_SIZE);
-  sceGuDepthBuffer((void*)(FRAMEBUFFER_SIZE*2),PSP_LINE_SIZE);
+  sceGuDrawBuffer(GU_PSM_8888,g2d_draw_buffer.data,LINE_SIZE);
+  sceGuDispBuffer(G2D_SCR_W,G2D_SCR_H,g2d_disp_buffer.data,LINE_SIZE);
+  sceGuDepthBuffer((void*)(FRAMEBUFFER_SIZE*2),LINE_SIZE);
   sceGuOffset(2048-(G2D_SCR_W/2),2048-(G2D_SCR_H/2));
   sceGuViewport(2048,2048,G2D_SCR_W,G2D_SCR_H);
 
@@ -1130,7 +1131,6 @@ g2dTexture* g2dTexLoad(char path[], g2dTex_Mode mode)
 
   fclose(fp);
   fp = NULL;
-  sceKernelDcacheWritebackAll();
 
   // The PSP can't draw 512*512+ textures.
   if (tex->w > 512 || tex->h > 512) goto error;
@@ -1143,9 +1143,10 @@ g2dTexture* g2dTexLoad(char path[], g2dTex_Mode mode)
     free(tex->data);
     tex->data = (g2dColor*)tmp;
     tex->swizzled = true;
-    sceKernelDcacheWritebackAll();
   }
   else tex->swizzled = false;
+
+  sceKernelDcacheWritebackRange(tex->data,tex->tw*tex->th*PIXEL_SIZE);
 
   return tex;
 
