@@ -10,18 +10,18 @@
  * \section limits Known limitations
  *
  * - Draw & display buffers can't actually be used as real textures. Just a way
- *   to get the vram pointer.
+ *     to get the vram pointer.
  * - No support for multiples contexts (e.g. sharing coordinates beetween
- *   textures using some gBegin calls at a time).
+ *     textures using some gBegin calls at a time).
  * - Manipulating textures (clear, get pixel info...) is not possible.
  * - When some 512*512 rotated, colorized and scaled textures are rendered
- *   at a time, the framerate *could* go under 60 fps.
+ *     at a time, the framerate *could* go under 60 fps.
  *
  * \section install Installation
  *
  * - Simply put glib2d.c and glib2d.h in your source directory. \n
  * - Then add glib2d.o and link "-lpng -ljpeg -lz -lpspgu -lm -lpspvram"
- *   in your Makefile.
+ *     in your Makefile.
  * - You're done !
  *
  * \section copyright License
@@ -39,7 +39,6 @@
  * https://github.com/GeeckoDev (contributors would be a plus!) \n
  * http://twitter.com/GeeckoDev
  */
-
 
 /**
  * \file glib2d.h
@@ -98,7 +97,7 @@ extern "C" {
  */
 #define G2D_SCR_W (480)
 #define G2D_SCR_H (272)
-#define G2D_VOID 0
+#define G2D_VOID (0)
 
 /**
  * \def G2D_RGBA(r,g,b,a)
@@ -107,7 +106,7 @@ extern "C" {
  * This macro creates a g2dColor from 4 values, red, green, blue and alpha.
  * Input range is from 0 to 255.
  */
-#define G2D_RGBA(r,g,b,a) ((r)|((g)<<8)|((b)<<16)|((a)<<24))
+#define G2D_RGBA(r, g, b, a) ((r)|((g)<<8)|((b)<<16)|((a)<<24))
 
 /**
  * \def G2D_GET_R(color)
@@ -125,10 +124,10 @@ extern "C" {
  * \def G2D_GET_A(color)
  * \brief Get alpha channel value from a g2dColor.
  */
-#define G2D_GET_R(color) (((color)    ) & 0xFF)
-#define G2D_GET_G(color) (((color)>>8 ) & 0xFF)
-#define G2D_GET_B(color) (((color)>>16) & 0xFF)
-#define G2D_GET_A(color) (((color)>>24) & 0xFF)
+#define G2D_GET_R(color) (((color)      ) & 0xFF)
+#define G2D_GET_G(color) (((color) >>  8) & 0xFF)
+#define G2D_GET_B(color) (((color) >> 16) & 0xFF)
+#define G2D_GET_A(color) (((color) >> 24) & 0xFF)
 
 /**
  * \def G2D_MODULATE(color,luminance,alpha)
@@ -138,10 +137,10 @@ extern "C" {
  * Input range is from 0 to 255.
  */
 #define G2D_MODULATE(color,luminance,alpha) \
-G2D_RGBA((int)(luminance)*G2D_GET_R(color)/255, \
-         (int)(luminance)*G2D_GET_G(color)/255, \
-         (int)(luminance)*G2D_GET_B(color)/255, \
-         (int)(alpha    )*G2D_GET_A(color)/255)
+    G2D_RGBA((int)(luminance) * G2D_GET_R(color) / 255, \
+             (int)(luminance) * G2D_GET_G(color) / 255, \
+             (int)(luminance) * G2D_GET_B(color) / 255, \
+             (int)(alpha    ) * G2D_GET_A(color) / 255)
 
 /**
  * \enum g2dColors
@@ -151,27 +150,27 @@ G2D_RGBA((int)(luminance)*G2D_GET_R(color)/255, \
  */
 enum g2dColors
 {
-  // Primary colors
-  RED          = 0xFF0000FF,
-  GREEN        = 0xFF00FF00,
-  BLUE         = 0xFFFF0000,
-  // Secondary colors
-  CYAN         = 0xFFFFFF00,
-  MAGENTA      = 0xFFFF00FF,
-  YELLOW       = 0xFF00FFFF,
-  // Tertiary colors
-  AZURE        = 0xFFFF7F00,
-  VIOLET       = 0xFFFF007F,
-  ROSE         = 0xFF7F00FF,
-  ORANGE       = 0xFF007FFF,
-  CHARTREUSE   = 0xFF00FF7F,
-  SPRING_GREEN = 0xFF7FFF00,
-  // Grayscale
-  WHITE        = 0xFFFFFFFF,
-  LITEGRAY     = 0xFFBFBFBF,
-  GRAY         = 0xFF7F7F7F,
-  DARKGRAY     = 0xFF3F3F3F,
-  BLACK        = 0xFF000000
+    // Primary colors
+    RED             = 0xFF0000FF,
+    GREEN           = 0xFF00FF00,
+    BLUE            = 0xFFFF0000,
+    // Secondary colors
+    CYAN            = 0xFFFFFF00,
+    MAGENTA         = 0xFFFF00FF,
+    YELLOW          = 0xFF00FFFF,
+    // Tertiary colors
+    AZURE           = 0xFFFF7F00,
+    VIOLET          = 0xFFFF007F,
+    ROSE            = 0xFF7F00FF,
+    ORANGE          = 0xFF007FFF,
+    CHARTREUSE      = 0xFF00FF7F,
+    SPRING_GREEN    = 0xFF7FFF00,
+    // Grayscale
+    WHITE           = 0xFFFFFFFF,
+    LITEGRAY        = 0xFFBFBFBF,
+    GRAY            = 0xFF7F7F7F,
+    DARKGRAY        = 0xFF3F3F3F,
+    BLACK           = 0xFF000000
 };
 
 /**
@@ -204,24 +203,24 @@ enum g2dColors
  */
 typedef enum
 {
-  G2D_UP_LEFT,
-  G2D_UP_RIGHT,
-  G2D_DOWN_RIGHT,
-  G2D_DOWN_LEFT,
-  G2D_CENTER
+    G2D_UP_LEFT,
+    G2D_UP_RIGHT,
+    G2D_DOWN_RIGHT,
+    G2D_DOWN_LEFT,
+    G2D_CENTER
 } g2dCoord_Mode;
 typedef enum
 {
-  G2D_STRIP = 1 /**< Make a line strip. */
+    G2D_STRIP = 1 /**< Make a line strip. */
 } g2dLine_Mode;
 typedef enum
 {
-  G2D_VSYNC = 1 /**< Limit the FPS to 60 (synchronized with the screen).
-                     Better quality and less power consumption. */
+    G2D_VSYNC = 1 /**< Limit the FPS to 60 (synchronized with the screen).
+                       Better quality and less power consumption. */
 } g2dFlip_Mode;
 typedef enum
 {
-  G2D_SWIZZLE = 1 /**< Recommended. Use it to get *more* rendering speed. */
+    G2D_SWIZZLE = 1 /**< Recommended. Use it to speedup rendering. */
 } g2dTex_Mode;
 
 /**
@@ -241,13 +240,13 @@ typedef unsigned int g2dColor;
  */
 typedef struct
 {
-  int tw;         /**< Real texture width. A power of two. */
-  int th;         /**< Real texture height. A power of two. */
-  int w;          /**< Texture width, as seen when drawing. */
-  int h;          /**< Texture height, as seen when drawing. */
-  float ratio;    /**< Width/height ratio. */
-  bool swizzled;  /**< Is the texture swizzled ? */
-  g2dColor* data; /**< Pointer to raw data. */
+    int tw;             /**< Real texture width. A power of two. */
+    int th;             /**< Real texture height. A power of two. */
+    int w;              /**< Texture width, as seen when drawing. */
+    int h;              /**< Texture height, as seen when drawing. */
+    float ratio;        /**< Width/height ratio. */
+    bool swizzled;      /**< Is the texture swizzled ? */
+    g2dColor *data;     /**< Pointer to raw data. */
 } g2dTexture;
 
 /**
@@ -303,7 +302,7 @@ void g2dClearZ();
  * g2dBegin*() / g2dEnd() couple can be called multiple times in the loop,
  * to render multiple textures.
  */
-void g2dBeginRects(g2dTexture* tex);
+void g2dBeginRects(g2dTexture *tex);
 
 /**
  * \brief Begins lines rendering.
@@ -325,7 +324,7 @@ void g2dBeginLines(g2dLine_Mode mode);
  * g2dBegin*() / g2dEnd() couple can be called multiple times in the loop,
  * to render multiple textures.
  */
-void g2dBeginQuads(g2dTexture* tex);
+void g2dBeginQuads(g2dTexture *tex);
 
 /**
  * \brief Begins points rendering.
@@ -405,7 +404,7 @@ g2dTexture* g2dTexCreate(int w, int h);
  * Must pass the pointer to the variable which contains the pointer,
  * to set it to NULL (passing NULL to a g2dBegin* function is safe).
  */
-void g2dTexFree(g2dTexture** tex);
+void g2dTexFree(g2dTexture **tex);
 
 /**
  * \brief Loads an image.
@@ -447,7 +446,7 @@ void g2dSetCoordMode(g2dCoord_Mode mode);
  * Parameters are pointers to float, not int !
  * Pass NULL if not needed.
  */
-void g2dGetCoordXYZ(float* x, float* y, float* z);
+void g2dGetCoordXYZ(float *x, float *y, float *z);
 
 /**
  * \brief Sets the new position.
@@ -490,7 +489,7 @@ void g2dSetCoordXYZRelative(float x, float y, float z);
 /**
  * \brief Use integer coordinates.
  * @param use false to desactivate (better look, by default),
-              true to activate (can be useful when you have glitches).
+                            true to activate (can be useful when you have glitches).
  *
  * This function must be called during object rendering.
  */
@@ -518,7 +517,7 @@ void g2dResetScale();
  *
  * Pass NULL if not needed.
  */
-void g2dGetGlobalScale(float* scale);
+void g2dGetGlobalScale(float *scale);
 
 /**
  * \brief Gets the current scale.
@@ -529,7 +528,7 @@ void g2dGetGlobalScale(float* scale);
  * Parameters are pointers to float, not int !
  * Pass NULL if not needed.
  */
-void g2dGetScaleWH(float* w, float* h);
+void g2dGetScaleWH(float *w, float *h);
 
 /**
  * \brief Sets the global scale.
@@ -604,7 +603,7 @@ void g2dResetAlpha();
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-void g2dGetAlpha(g2dAlpha* alpha);
+void g2dGetAlpha(g2dAlpha *alpha);
 
 /**
  * \brief Sets the new color.
@@ -648,7 +647,7 @@ void g2dResetRotation();
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-void g2dGetRotationRad(float* radians);
+void g2dGetRotationRad(float *radians);
 
 /**
  * \brief Gets the current rotation, in degrees.
@@ -657,7 +656,7 @@ void g2dGetRotationRad(float* radians);
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-void g2dGetRotation(float* degrees);
+void g2dGetRotation(float *degrees);
 
 /**
  * \brief Sets the new rotation, in radians.
@@ -711,7 +710,7 @@ void g2dResetCrop();
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-void g2dGetCropXY(int* x, int* y);
+void g2dGetCropXY(int *x, int *y);
 
 /**
  * \brief Gets the current crop scale.
@@ -721,7 +720,7 @@ void g2dGetCropXY(int* x, int* y);
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-void g2dGetCropWH(int* w, int* h);
+void g2dGetCropWH(int *w, int *h);
 
 /**
  * \brief Sets the new crop position.
@@ -785,7 +784,7 @@ void g2dSetTexRepeat(bool use);
 /**
  * \brief Use the bilinear filter with the texture.
  * @param use true to activate (better look, by default).
-              false to desactivate (better performance).
+                            false to desactivate (better performance).
  *
  * This function must be called during object rendering.
  * Only useful when scaling.
