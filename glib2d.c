@@ -1152,19 +1152,15 @@ g2dTexture*g2dTexCreate(int w, int h)
 
 void g2dTexFree(g2dTexture **tex)
 {
-    if (tex)
-    {
-        if (*tex)
-        {
-            if ((*tex)->data)
-            {
-                free((*tex)->data);
-            }
-        
-            free((*tex));
-            *tex = NULL;
-        }
-    }
+    if (tex == NULL)
+        return;
+    if (*tex == NULL)
+        return;
+
+    free((*tex)->data);
+    free((*tex));
+
+    *tex = NULL;
 }
 
 
